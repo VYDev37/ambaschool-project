@@ -1,0 +1,308 @@
+.pod {
+  position: relative;
+  background: radial-gradient(circle at 50% 50%, rgba(230, 57, 70, 0.05) 0%, transparent 70%);
+}
+
+.pod__header {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto var(--space-2xl);
+}
+
+.pod__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  background: rgba(240, 180, 41, 0.12);
+  border: 1px solid rgba(240, 180, 41, 0.25);
+  color: var(--accent-300);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+}
+
+.pod__tag-icon {
+  color: var(--accent-400);
+}
+
+.pod__title {
+  font-size: clamp(1.8rem, 3.8vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: var(--space-md);
+}
+
+.pod__subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.pod__container {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.pod__card {
+  border-radius: var(--radius-2xl);
+  padding: var(--space-2xl) var(--space-2xl);
+  border: 1px solid rgba(240, 180, 41, 0.18);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 30px rgba(240, 180, 41, 0.05);
+  background: linear-gradient(160deg, rgba(32, 28, 25, 0.85) 0%, rgba(18, 15, 14, 0.95) 100%);
+}
+
+.pod__badge-group {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.pod__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-secondary);
+}
+
+.pod__pill--gold {
+  background: rgba(240, 180, 41, 0.15);
+  color: var(--accent-300);
+  border: 1px solid rgba(240, 180, 41, 0.3);
+}
+
+.pod__main-expression {
+  text-align: center;
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--surface-glass-border);
+  margin-bottom: var(--space-xl);
+}
+
+.pod__chinese {
+  display: block;
+  font-size: clamp(2.8rem, 6vw, 4.2rem);
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #ffffff 0%, #fce588 50%, #f0b429 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-sm);
+}
+
+.pod__sound-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.pod__poj {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--primary-300);
+  font-family: var(--font-sans);
+}
+
+.pod__ipa {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.pod__audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: rgba(230, 57, 70, 0.18);
+  border: 1px solid rgba(230, 57, 70, 0.4);
+  color: #ff8585;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.pod__audio-btn:hover {
+  background: var(--primary-500);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+}
+
+.pod__audio-btn--playing {
+  animation: pulse-glow 1s infinite alternate;
+  background: var(--primary-500);
+  color: white;
+}
+
+.pod__translations {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.pod__trans-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.pod__trans-box--sub {
+  border-style: dashed;
+}
+
+.pod__trans-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.pod__trans-val {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pod__insight {
+  background: rgba(240, 180, 41, 0.04);
+  border: 1px solid rgba(240, 180, 41, 0.15);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.pod__insight-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-300);
+  margin-bottom: var(--space-sm);
+}
+
+.pod__insight-icon {
+  color: var(--accent-400);
+}
+
+.pod__insight-text {
+  font-size: 0.95rem;
+  color: var(--neutral-200);
+  line-height: 1.6;
+  margin-bottom: var(--space-sm);
+}
+
+.pod__situation {
+  font-size: 0.85rem;
+  color: var(--neutral-400);
+}
+
+.pod__tones-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.pod__tones-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.pod__tones-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pod__tone-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  color: var(--neutral-300);
+}
+
+.pod__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--surface-glass-border);
+}
+
+.pod__nav-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.pod__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all var(--transition-fast);
+}
+
+.pod__dot--active {
+  background: var(--accent-400);
+  width: 28px;
+  border-radius: var(--radius-full);
+}
+
+.pod__copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.pod__copy-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.pod__copy-btn--copied {
+  background: rgba(40, 200, 64, 0.15);
+  border-color: rgba(40, 200, 64, 0.4);
+  color: #3ae374;
+}
+
+@media (max-width: 640px) {
+  .pod__card {
+    padding: var(--space-xl) var(--space-md);
+  }
+  .pod__translations {
+    grid-template-columns: 1fr;
+  }
+  .pod__footer {
+    flex-direction: column-reverse;
+    gap: var(--space-md);
+  }
+}
