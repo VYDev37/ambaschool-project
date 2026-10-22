@@ -1,0 +1,302 @@
+.streak {
+  position: relative;
+  background: var(--surface-bg);
+  border-top: 1px solid var(--surface-glass-border);
+}
+
+.streak__header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto var(--space-3xl);
+}
+
+.streak__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-md);
+}
+
+.streak__title {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: var(--space-md);
+}
+
+.streak__subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Stats Row */
+.streak__stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.streak__stat-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+  border: 1px solid var(--surface-glass-border);
+  backdrop-filter: blur(20px);
+  transition: all var(--transition-base);
+  overflow: hidden;
+}
+
+.streak__stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: var(--gradient-shine);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.streak__stat-card:hover::after {
+  left: 200%;
+}
+
+.streak__stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--surface-glass-border-hover);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.streak__stat-card--fire {
+  border-color: rgba(245, 158, 11, 0.2);
+  background: linear-gradient(145deg, rgba(40, 25, 10, 0.6) 0%, var(--surface-card) 100%);
+}
+
+.streak__stat-card--fire:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 8px 30px rgba(245, 158, 11, 0.1);
+}
+
+.streak__stat-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.streak__stat-icon-wrap--fire {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.streak__stat-icon-wrap--words {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.streak__stat-icon-wrap--days {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.streak__stat-icon-wrap--trend {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.streak__stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.streak__stat-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.1;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.streak__stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.streak__stat-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+/* Weekly chart */
+.streak__weekly {
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl) var(--space-2xl);
+  margin-bottom: var(--space-xl);
+}
+
+.streak__weekly-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+}
+
+.streak__weekly-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.streak__weekly-icon {
+  color: var(--accent-400);
+  font-size: 1.2rem;
+}
+
+.streak__weekly-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.streak__weekly-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.streak__weekly-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  height: 140px;
+}
+
+.streak__bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  height: 100%;
+}
+
+.streak__bar-track {
+  flex: 1;
+  width: 100%;
+  max-width: 48px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.streak__bar-fill {
+  width: 100%;
+  border-radius: var(--radius-md);
+  min-height: 4px;
+  transition: background 0.3s ease;
+}
+
+.streak__bar-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.streak__bar-col--today .streak__bar-label {
+  color: var(--primary-400);
+}
+
+.streak__bar-col--today .streak__bar-track {
+  background: rgba(230, 57, 70, 0.08);
+  border: 1px solid rgba(230, 57, 70, 0.15);
+}
+
+/* Action */
+.streak__action {
+  text-align: center;
+}
+
+.streak__action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 20px rgba(230, 57, 70, 0.35);
+  transition: all var(--transition-base);
+}
+
+.streak__action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(230, 57, 70, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .streak__stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .streak__stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .streak__weekly {
+    padding: var(--space-lg);
+  }
+
+  .streak__weekly-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .streak__bar-track {
+    max-width: 36px;
+  }
+}

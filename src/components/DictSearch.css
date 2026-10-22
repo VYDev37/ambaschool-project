@@ -118,6 +118,40 @@
   margin-right: 8px;
 }
 
+/* Quick Suggestion Pills */
+.dict-search-widget__pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dict-search-widget__pills-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.dict-search-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dict-search-pill:hover {
+  background: rgba(240, 180, 41, 0.15);
+  border-color: rgba(240, 180, 41, 0.35);
+  color: var(--accent-300);
+  transform: translateY(-1px);
+}
+
 /* Hints */
 .dict-search-widget__hints {
   display: flex;
@@ -138,6 +172,7 @@
 .dict-search-hint svg {
   font-size: 0.85rem;
 }
+
 
 /* Live results */
 .dict-search-widget__results {
@@ -196,6 +231,12 @@
   color: white;
 }
 
+.dict-search-result__audio--active {
+  background: var(--primary-500) !important;
+  color: white !important;
+  animation: audioPulse 1.2s infinite;
+}
+
 .dict-search-result__mid {
   display: flex;
   flex-direction: column;
@@ -219,7 +260,26 @@
 }
 
 .dict-search-result__medan {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ff8585;
+  background: rgba(230, 57, 70, 0.15);
+  border: 1px solid rgba(230, 57, 70, 0.3);
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+}
+
+.dict-search-result__arrow {
+  color: var(--text-muted);
+  font-size: 1rem;
+  opacity: 0.4;
+  transition: all var(--transition-fast);
+}
+
+.dict-search-result:hover .dict-search-result__arrow {
+  opacity: 1;
+  color: var(--accent-300);
+  transform: translateX(4px);
 }
 
 /* Empty */
@@ -236,6 +296,17 @@
 .dict-search-widget__empty strong {
   color: var(--text-primary);
 }
+
+.dict-search-empty-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-300);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 
 /* CTA */
 .dict-search-section__cta {

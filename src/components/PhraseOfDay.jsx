@@ -1,6 +1,17 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { HiVolumeUp, HiClipboardCopy, HiCheck, HiSparkles, HiLightBulb } from 'react-icons/hi'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  HiVolumeUp,
+  HiClipboardCopy,
+  HiCheck,
+  HiSparkles,
+  HiLightBulb,
+  HiChevronLeft,
+  HiChevronRight,
+  HiShare
+} from 'react-icons/hi'
+import { playClick } from '../utils/soundEffects'
+import { useToast } from '../context/ToastContext'
 import './PhraseOfDay.css'
 
 const phrases = [
@@ -12,7 +23,8 @@ const phrases = [
     literal: 'Makan kenyang belum?',
     explanation: 'Sapaan paling hangat dalam budaya Hokkien. Mirip dengan "Apa kabar?", menanyakan apakah seseorang sudah makan adalah bentuk perhatian mendalam.',
     tones: ['Nada 8 (masuk tinggi)', 'Nada 2 (turun)', 'Nada 7 (datar tengah)'],
-    situation: 'Dipakai saat berpapasan dengan teman, tetangga, atau kerabat di waktu santai/makan.'
+    situation: 'Dipakai saat berpapasan dengan teman, tetangga, atau kerabat di waktu santai/makan.',
+    tag: 'Sapaan Khas'
   },
   {
     chinese: '愛拼才會贏',
@@ -22,7 +34,19 @@ const phrases = [
     literal: 'Mau berjuang baru akan menang',
     explanation: 'Peribahasa dan judul lagu legendaris Minnan yang melambangkan etos kerja keras dan ketangguhan perantau Hokkien di seluruh dunia.',
     tones: ['Nada 3', 'Nada 2 nasal', 'Nada 7', 'Nada 7', 'Nada 5'],
-    situation: 'Pemberi semangat untuk teman yang sedang menghadapi ujian, merintis usaha, atau menghadapi tantangan.'
+    situation: 'Pemberi semangat untuk teman yang sedang menghadapi ujian, merintis usaha, atau menghadapi tantangan.',
+    tag: 'Filosofi Hidup'
+  },
+  {
+    chinese: '食果子拜樹頭',
+    poj: 'Chia̍h kóe-chí pài chhiū-thâu',
+    ipa: '[tsiaʔ⁵² kue⁵³-tsi⁵³ pai²¹ tsʰiu³³-tʰau²⁴]',
+    indonesian: 'Makan buah ingat pohonnya (Tahu membalas budi)',
+    literal: 'Makan buah sujud menghadap pangkal pohon',
+    explanation: 'Peribahasa luhur tentang rasa syukur dan bakti kepada orang tua, guru, atau siapa saja yang telah menanam pohon kebaikan untuk kita.',
+    tones: ['Nada 8', 'Nada 2', 'Nada 2', 'Nada 3', 'Nada 7', 'Nada 5'],
+    situation: 'Nasihat moral kepada generasi muda agar selalu menghormati leluhur dan tidak sombong saat berhasil.',
+    tag: 'Kearifan Moral'
   },
   {
     chinese: '有緣千里來相會',
@@ -32,7 +56,19 @@ const phrases = [
     literal: 'Ada takdir seribu li datang saling temu',
     explanation: 'Ungkapan puitis Hokkien tentang persahabatan, cinta, atau perjumpaan berharga yang dipercaya telah digariskan takdir.',
     tones: ['Nada 7', 'Nada 5', 'Nada 1', 'Nada 2', 'Nada 5', 'Nada 1', 'Nada 7'],
-    situation: 'Diucapkan saat bertemu kawan lama atau kenalan baru yang langsung terasa akrab.'
+    situation: 'Diucapkan saat bertemu kawan lama atau kenalan baru yang langsung terasa akrab.',
+    tag: 'Puitis & Kasih'
+  },
+  {
+    chinese: '好水好氣',
+    poj: 'Hó-súi hó-khì',
+    ipa: '[ho⁵³-sui⁵³ ho⁵³-kʰi²¹]',
+    indonesian: 'Sangat rupawan, elok, dan berwibawa menyenangkan',
+    literal: 'Bagus air bagus udara/hawa',
+    explanation: 'Pujian kultural yang menggambarkan seseorang yang tidak hanya berpenampilan elok menawan, tetapi juga ramah dan membangkitkan aura positif di sekitarnya.',
+    tones: ['Nada 2', 'Nada 2', 'Nada 2', 'Nada 3'],
+    situation: 'Pujian untuk sahabat atau kerabat yang datang berpakaian rapi dan tersenyum cerah.',
+    tag: 'Pujian Akrab'
   }
 ]
 
@@ -40,13 +76,28 @@ export default function PhraseOfDay() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [copied, setCopied] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const { showToast } = useToast()
 
   const phrase = phrases[currentIndex]
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`${phrase.chinese} (${phrase.poj}) - ${phrase.indonesian}`)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    playClick()
+    const text = `「${phrase.chinese}」(${phrase.poj})\nArti: ${phrase.indonesian}\nMakna: ${phrase.explanation}\nBelajar Bahasa Hokkien di HokkienLearn`
+    navigator.clipboard?.writeText(text).then(() => {
+      setCopied(true)
+      showToast('📋 Frasa disalin ke clipboard!', 'success', 2000)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  const nextPhrase = () => {
+    playClick()
+    setCurrentIndex(prev => (prev < phrases.length - 1 ? prev + 1 : 0))
+  }
+
+  const prevPhrase = () => {
+    playClick()
+    setCurrentIndex(prev => (prev > 0 ? prev - 1 : phrases.length - 1))
   }
 
   const playVoice = () => {
@@ -55,7 +106,7 @@ export default function PhraseOfDay() {
       window.speechSynthesis.cancel()
       const utterance = new SpeechSynthesisUtterance(phrase.chinese)
       utterance.lang = 'zh-TW'
-      utterance.rate = 0.85
+      utterance.rate = 0.82
       utterance.onend = () => setIsPlaying(false)
       utterance.onerror = () => setIsPlaying(false)
       window.speechSynthesis.speak(utterance)
@@ -87,87 +138,117 @@ export default function PhraseOfDay() {
         </motion.div>
 
         <div className="pod__container">
-          <motion.div
-            className="pod__card glass"
-            key={currentIndex}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-          >
-            <div className="pod__badge-group">
-              <span className="pod__pill">Harian</span>
-              <span className="pod__pill pod__pill--gold">Kearifan Lokal</span>
-            </div>
+          <div className="pod__wrapper-with-nav">
+            {/* Prev button */}
+            <button
+              className="pod__arrow-btn pod__arrow-btn--prev"
+              onClick={prevPhrase}
+              aria-label="Frasa sebelumnya"
+            >
+              <HiChevronLeft size={24} />
+            </button>
 
-            <div className="pod__main-expression">
-              <span className="pod__chinese chinese-text">{phrase.chinese}</span>
-              <div className="pod__sound-row">
-                <span className="pod__poj">{phrase.poj}</span>
-                <span className="pod__ipa">{phrase.ipa}</span>
-                <button
-                  className={`pod__audio-btn ${isPlaying ? 'pod__audio-btn--playing' : ''}`}
-                  onClick={playVoice}
-                  title="Dengarkan pelafalan"
-                >
-                  <HiVolumeUp size={22} />
-                  <span>{isPlaying ? 'Memutar...' : 'Dengar'}</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="pod__translations">
-              <div className="pod__trans-box">
-                <span className="pod__trans-label">Arti Kontekstual:</span>
-                <p className="pod__trans-val">"{phrase.indonesian}"</p>
-              </div>
-              <div className="pod__trans-box pod__trans-box--sub">
-                <span className="pod__trans-label">Harfiah:</span>
-                <p className="pod__trans-val">{phrase.literal}</p>
-              </div>
-            </div>
-
-            <div className="pod__insight">
-              <div className="pod__insight-header">
-                <HiLightBulb className="pod__insight-icon" />
-                <span>Konteks & Nilai Budaya</span>
-              </div>
-              <p className="pod__insight-text">{phrase.explanation}</p>
-              <div className="pod__situation">
-                <strong>Kapan dipakai:</strong> {phrase.situation}
-              </div>
-            </div>
-
-            <div className="pod__tones-wrap">
-              <span className="pod__tones-title">Struktur Nada:</span>
-              <div className="pod__tones-list">
-                {phrase.tones.map((t, idx) => (
-                  <span key={idx} className="pod__tone-chip">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="pod__footer">
-              <div className="pod__nav-dots">
-                {phrases.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentIndex(i)}
-                    className={`pod__dot ${i === currentIndex ? 'pod__dot--active' : ''}`}
-                    aria-label={`Frasa ${i + 1}`}
-                  />
-                ))}
-              </div>
-              <button
-                className={`pod__copy-btn ${copied ? 'pod__copy-btn--copied' : ''}`}
-                onClick={handleCopy}
+            <AnimatePresence mode="wait">
+              <motion.div
+                className="pod__card glass"
+                key={currentIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
               >
-                {copied ? <HiCheck size={18} /> : <HiClipboardCopy size={18} />}
-                <span>{copied ? 'Tersalin!' : 'Salin Frasa'}</span>
-              </button>
-            </div>
-          </motion.div>
+                <div className="pod__badge-group">
+                  <span className="pod__pill">{phrase.tag}</span>
+                  <span className="pod__pill pod__pill--gold">Kearifan Lokal Minnan</span>
+                  <span className="pod__counter-pill">
+                    {currentIndex + 1} / {phrases.length}
+                  </span>
+                </div>
+
+                <div className="pod__main-expression">
+                  <span className="pod__chinese chinese-text">{phrase.chinese}</span>
+                  <div className="pod__sound-row">
+                    <span className="pod__poj">{phrase.poj}</span>
+                    <span className="pod__ipa">{phrase.ipa}</span>
+                    <button
+                      className={`pod__audio-btn ${isPlaying ? 'pod__audio-btn--playing' : ''}`}
+                      onClick={playVoice}
+                      title="Dengarkan pelafalan asli"
+                    >
+                      <HiVolumeUp size={22} />
+                      <span>{isPlaying ? 'Memutar...' : 'Dengar'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pod__translations">
+                  <div className="pod__trans-box">
+                    <span className="pod__trans-label">Arti Kontekstual:</span>
+                    <p className="pod__trans-val">"{phrase.indonesian}"</p>
+                  </div>
+                  <div className="pod__trans-box pod__trans-box--sub">
+                    <span className="pod__trans-label">Harfiah:</span>
+                    <p className="pod__trans-val">{phrase.literal}</p>
+                  </div>
+                </div>
+
+                <div className="pod__insight">
+                  <div className="pod__insight-header">
+                    <HiLightBulb className="pod__insight-icon" />
+                    <span>Konteks & Nilai Budaya</span>
+                  </div>
+                  <p className="pod__insight-text">{phrase.explanation}</p>
+                  <div className="pod__situation">
+                    <strong>Kapan dipakai:</strong> {phrase.situation}
+                  </div>
+                </div>
+
+                <div className="pod__tones-wrap">
+                  <span className="pod__tones-title">Struktur Nada & Kontur:</span>
+                  <div className="pod__tones-list">
+                    {phrase.tones.map((t, idx) => (
+                      <span key={idx} className="pod__tone-chip">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pod__footer">
+                  <div className="pod__nav-dots">
+                    {phrases.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          playClick()
+                          setCurrentIndex(i)
+                        }}
+                        className={`pod__dot ${i === currentIndex ? 'pod__dot--active' : ''}`}
+                        aria-label={`Frasa ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    className={`pod__copy-btn ${copied ? 'pod__copy-btn--copied' : ''}`}
+                    onClick={handleCopy}
+                  >
+                    {copied ? <HiCheck size={18} /> : <HiClipboardCopy size={18} />}
+                    <span>{copied ? 'Tersalin!' : 'Bagikan / Salin'}</span>
+                  </button>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Next button */}
+            <button
+              className="pod__arrow-btn pod__arrow-btn--next"
+              onClick={nextPhrase}
+              aria-label="Frasa berikutnya"
+            >
+              <HiChevronRight size={24} />
+            </button>
+          </div>
         </div>
       </div>
     </section>

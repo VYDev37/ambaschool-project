@@ -41,11 +41,42 @@
 }
 
 .pod__container {
-  max-width: 780px;
+  max-width: 860px;
   margin: 0 auto;
 }
 
+.pod__wrapper-with-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+.pod__arrow-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.pod__arrow-btn:hover {
+  background: rgba(240, 180, 41, 0.15);
+  border-color: rgba(240, 180, 41, 0.35);
+  color: var(--accent-300);
+  transform: scale(1.08);
+}
+
 .pod__card {
+  flex: 1;
+  min-width: 0;
   border-radius: var(--radius-2xl);
   padding: var(--space-2xl) var(--space-2xl);
   border: 1px solid rgba(240, 180, 41, 0.18);
@@ -55,9 +86,23 @@
 
 .pod__badge-group {
   display: flex;
+  align-items: center;
   gap: var(--space-sm);
   margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
 }
+
+.pod__counter-pill {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
 
 .pod__pill {
   font-size: 0.75rem;
@@ -295,6 +340,13 @@
 }
 
 @media (max-width: 640px) {
+  .pod__wrapper-with-nav {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .pod__arrow-btn {
+    display: none;
+  }
   .pod__card {
     padding: var(--space-xl) var(--space-md);
   }
@@ -306,3 +358,4 @@
     gap: var(--space-md);
   }
 }
+

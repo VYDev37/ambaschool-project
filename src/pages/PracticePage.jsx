@@ -12,9 +12,13 @@ import {
   HiPuzzle,
   HiLocationMarker
 } from 'react-icons/hi'
+import { triggerConfetti } from '../utils/confetti'
+import { playSuccess, playIncorrect, playFanfare, playClick, playFlip } from '../utils/soundEffects'
+import { useToast } from '../context/ToastContext'
 import './PracticePage.css'
 
-// 1. Comprehensive Quiz questions covering Medan & Taiwan Minnan
+
+// 1. Comprehensive Quiz questions covering Medan & Taiwan Minnan (20 Soal Pilihan)
 const quizQuestions = [
   {
     question: 'Di kedai kopi Medan, ungkapan "Lim kún-chúi" (飲滾水) berarti...',
@@ -103,19 +107,158 @@ const quizQuestions = [
     ],
     correct: 1,
     explanation: 'Menanyakan sudah makan atau belum adalah bentuk sapaan paling akrab dan peduli dalam budaya Hokkien.'
+  },
+  {
+    question: 'Keunikan nada ke-4 dan ke-8 (Ji̍p-siaⁿ / Entering Tone) dalam fonetik Hokkien adalah...',
+    options: [
+      'Selalu diakhiri konsonan letup pendek (-p, -t, -k, atau -h)',
+      'Hanya boleh diucapkan oleh pria dewasa',
+      'Berdengung panjang seperti nyanyian seruling',
+      'Tidak memiliki arti harfiah'
+    ],
+    correct: 0,
+    explanation: 'Nada 4 dan 8 adalah nada perhentian bersuara pendek terputus yang melestarikan fonologi Tionghoa kuno.'
+  },
+  {
+    question: 'Kata serapan kuliner "Bí-hún" (米粉) secara harfiah berarti...',
+    options: [
+      'Serat/Tepung dari beras (Bí = Beras, Hún = Tepung)',
+      'Mie terigu kenyal',
+      'Gorengan pisang kepok',
+      'Daging ayam cincang'
+    ],
+    correct: 0,
+    explanation: '"Bí" berarti beras dan "Hún" berarti tepung halus.'
+  },
+  {
+    question: 'Istilah pasar di Taiwan disebut "Chhài-chhī-á" (菜市仔), sedangkan di Medan umum disebut...',
+    options: [
+      'Pa-sat (巴刹 - serapan Melayu)',
+      'Kopitiam',
+      'Chē-chhia',
+      'Kún-chúi'
+    ],
+    correct: 0,
+    explanation: 'Hokkien Medan menyerap kata Melayu "Pasar" menjadi "Pa-sat" yang sangat lazim digunakan.'
+  },
+  {
+    question: 'Nilai kejujuran dan kepercayaan dalam berbisnis pedagang Tionghoa disebut...',
+    options: [
+      '誠信 (Sêng-sìn)',
+      '落科 (Lo̍k-kho)',
+      '無底代 (Bô-tī-tô)',
+      '愛睏 (Ài-khùn)'
+    ],
+    correct: 0,
+    explanation: '"Sêng-sìn" (誠信) adalah integritas dan kejujuran yang menjadi kunci keberhasilan niaga.'
+  },
+  {
+    question: 'Doa "Chia̍h pah-jī" sering diucapkan kepada Akong & Amah yang bermakna...',
+    options: [
+      'Panjang umur sampai 120 tahun',
+      'Makan dua belas mangkuk mie',
+      'Membagikan 120 amplop angpao',
+      'Jalan sehat seratus langkah'
+    ],
+    correct: 0,
+    explanation: '"Pah-jī" (120) melambangkan umur yang sangat panjang, berkah, dan sehat.'
+  },
+  {
+    question: 'Ungkapan rasa syukur "Hó-ka-chài" (好佳哉) dalam bahasa Indonesia berarti...',
+    options: [
+      'Untunglah! / Syukurlah selamat!',
+      'Harganya sangat mahal!',
+      'Jangan bohongi saya!',
+      'Sampai bertemu besok pagi!'
+    ],
+    correct: 0,
+    explanation: '"Hó-ka-chài" diucapkan saat merasa lega terhindar dari kesialan atau bahaya.'
+  },
+  {
+    question: 'Kata "Chhit-thô" (七逃) yang sangat populer di kalangan anak muda bermakna...',
+    options: [
+      'Jalan-jalan / Rekreasi santai / Bermain',
+      'Bekerja keras di kantor',
+      'Tertidur di meja belajar',
+      'Membayar tagihan listrik'
+    ],
+    correct: 0,
+    explanation: '"Chhit-thô" bermakna bermain, bepergian santai, atau refreshing liburan.'
+  },
+  {
+    question: 'Kuliner sup herbal iga berkuah rempah khas pesisir Sumatera & Selat Malaka disebut...',
+    options: [
+      '肉骨茶 (Bah-kut-tê)',
+      '豆花 (Tāu-hoe)',
+      '米粉 (Bí-hún)',
+      '薄餅 (Po̍h-piáⁿ)'
+    ],
+    correct: 0,
+    explanation: 'Bah-kut-tê adalah kuliner peranakan legendaris yang memadukan daging iga dan rempah herbal.'
+  },
+  {
+    question: 'Jika ingin berbelok ke arah kanan, instruksi dalam bahasa Hokkien adalah...',
+    options: [
+      'Uan chià-pîng (Belok kanan)',
+      'Uan tò-pîng (Belok kiri)',
+      'Ti̍t-ti̍t kiâⁿ (Lurus terus)',
+      'Thêng chhia (Stop di sini)'
+    ],
+    correct: 0,
+    explanation: '"Chià-pîng" adalah sebelah kanan, sedangkan "Tò-pîng" adalah kiri.'
+  },
+  {
+    question: 'Aksara "厝" (dibaca "Chhù") dalam bahasa Hokkien memiliki arti...',
+    options: [
+      'Rumah kediaman',
+      'Pasar tradisional',
+      'Perahu nelayan',
+      'Toko kelontong'
+    ],
+    correct: 0,
+    explanation: '"Chhù" adalah kosakata klasik Minnan yang berarti rumah hunian.'
+  },
+  {
+    question: 'Pepatah dan lagu legendaris "Ài piàⁿ chiah ē iâⁿ" mengajarkan bahwa...',
+    options: [
+      'Harus berjuang dan bekerja keras baru bisa meraih kemenangan',
+      'Orang yang santai akan selalu beruntung',
+      'Cukup berdoa tanpa perlu berusaha',
+      'Beli barang murah pasti untung'
+    ],
+    correct: 0,
+    explanation: '"Ài piàⁿ chiah ē iâⁿ" melambangkan etos kerja keras dan keuletan perantau Hokkien.'
+  },
+  {
+    question: 'Mengapa buah Nanas ("Ông-lâi" / 鳳梨) selalu hadir saat Imlek & Sembahyang Hokkien?',
+    options: [
+      'Pelafalannya "Ông-lâi" berbunyi seperti ungkapan "Kemakmuran & Rezeki Datang"',
+      'Karena buah nanas berakar di pegunungan Minnan',
+      'Karena rasanya tidak disukai hewan buas',
+      'Karena berwarna merah menyala'
+    ],
+    correct: 0,
+    explanation: 'Bunyi "Ông-lâi" homofon dengan kata "Kemakmuran Datang" (旺來).'
   }
 ]
 
-// 2. Listening / Tebak Suara Challenge
+// 2. Listening / Tebak Suara Challenge (12 Tantangan Audio)
 const listeningChallenges = [
   { hanji: '滾水', poj: 'Kún-chúi', options: ['Air masak matang', 'Kopi susu panas', 'Es teh manis', 'Kue lobak'], correct: 0 },
   { hanji: '頭家', poj: 'Thâu-ke', options: ['Karyawan baru', 'Tauke / Bos pemilik toko', 'Dokter tabib', 'Sopir angkot'], correct: 1 },
   { hanji: '歹勢', poj: 'Pháinn-sè', options: ['Terima kasih banyak', 'Selamat ulang tahun', 'Maaf / Permisi sungkan', 'Sampai jumpa besok'], correct: 2 },
   { hanji: '炒粿條', poj: 'Chhá-kóe-tiâu', options: ['Bakmi kuah', 'Nasi tim ayam', 'Kwetiau goreng', 'Bubur ikan'], correct: 2 },
-  { hanji: '愛拼才會贏', poj: 'Ài piàⁿ chiah ē iâⁿ', options: ['Harus berjuang baru bisa menang', 'Hidup tenang tanpa beban', 'Makan kenyang tidur nyenyak', 'Beli banyak dapat murah'], correct: 0 }
+  { hanji: '愛拼才會贏', poj: 'Ài piàⁿ chiah ē iâⁿ', options: ['Harus berjuang baru bisa menang', 'Hidup tenang tanpa beban', 'Makan kenyang tidur nyenyak', 'Beli banyak dapat murah'], correct: 0 },
+  { hanji: '咖啡烏冰', poj: 'Ko-pi-o-peng', options: ['Es kopi hitam manis', 'Teh susu kental', 'Es kembang tahu', 'Air kelapa muda'], correct: 0 },
+  { hanji: '多謝', poj: 'To-siā', options: ['Selamat pagi', 'Terima kasih banyak', 'Tidak apa-apa', 'Silakan masuk'], correct: 1 },
+  { hanji: '菜頭粿', poj: 'Chhài-thâu-kóe', options: ['Kue lobak goreng gurih', 'Kue bolu keju', 'Kue onde wijen', 'Roti selai srikaya'], correct: 0 },
+  { hanji: '兄弟', poj: 'Hia-tī', options: ['Paman kakek', 'Sobat karib / Bro akrab', 'Pemilik toko', 'Penjual sayur'], correct: 1 },
+  { hanji: '做生意', poj: 'Chò seng-lí', options: ['Berdagang / Bisnis niaga', 'Menulis surat kabar', 'Menyanyi di panggung', 'Berolahraga pagi'], correct: 0 },
+  { hanji: '豆花', poj: 'Tāu-hoe', options: ['Kembang tahu kuah jahe manis', 'Kecap asin pekat', 'Tempe goreng tepung', 'Tahu kering tumis'], correct: 0 },
+  { hanji: '好看', poj: 'Hó-súi', options: ['Sulit dipahami', 'Biasa saja', 'Keren / Mantap / Menawan', 'Sangat mahal'], correct: 2 }
 ]
 
-// 3. Flashcard Deck
+// 3. Flashcard Deck (16 Kartu Pilihan)
 const flashcards = [
   { id: 1, hanji: '滾水', poj: 'Kún-chúi', indo: 'Air masak matang', tip: 'Khas Medan: "Thâu-ke, chi̍t-poe kún-chúi!"' },
   { id: 2, hanji: '歹勢', poj: 'Pháinn-sè', indo: 'Maaf / Permisi / Segan', tip: 'Sering dipakai saat meminta maaf atau permisi lewat' },
@@ -124,17 +267,29 @@ const flashcards = [
   { id: 5, hanji: '好食', poj: 'Hó-chia̍h', indo: 'Enak / Lezat', tip: 'Dipakai memuji masakan sedap' },
   { id: 6, hanji: '菜頭粿', poj: 'Chhài-thâu-kóe', indo: 'Kue lobak goreng', tip: 'Sarapan favorit di Medan dan Selatpanjang' },
   { id: 7, hanji: '賺錢', poj: 'Thàn-chîⁿ', indo: 'Cari uang / Cuan untung', tip: 'Asal usul kata serapan "Cuan"' },
-  { id: 8, hanji: '做伙', poj: 'Chò-hóe', indo: 'Bersama-sama / Barengan', tip: '"Lán chò-hóe chia̍h" = Kita makan bareng' }
+  { id: 8, hanji: '做伙', poj: 'Chò-hóe', indo: 'Bersama-sama / Barengan', tip: '"Lán chò-hóe chia̍h" = Kita makan bareng' },
+  { id: 9, hanji: '俗', poj: 'Sio̍k', indo: 'Murah meriah', tip: 'Lawan kata dari "Kùi" (mahal)' },
+  { id: 10, hanji: '貴', poj: 'Kùi', indo: 'Mahal harganya', tip: 'Sering dipakai saat tawar harga di pasar' },
+  { id: 11, hanji: '食飽未', poj: 'Chia̍h-pá--bē', indo: 'Sudah makan belum? (Apa kabar)', tip: 'Sapaan hangat penuh perhatian' },
+  { id: 12, hanji: '愛拼才會贏', poj: 'Ài piàⁿ chiah ē iâⁿ', indo: 'Berjuang keras baru bisa menang', tip: 'Etos kerja tangguh orang Minnan' },
+  { id: 13, hanji: '七逃', poj: 'Chhit-thô', indo: 'Jalan-jalan / Rekreasi / Healing', tip: 'Ungkapan gaul santai melepas penat' },
+  { id: 14, hanji: '合意', poj: 'Kah-ì', indo: 'Suka / Cocok di hati', tip: '"Góa chin kah-ì lí" = Aku suka padamu' },
+  { id: 15, hanji: '阿公', poj: 'A-kong', indo: 'Kakek tercinta', tip: 'Kepala keluarga sesepuh' },
+  { id: 16, hanji: '阿嬤', poj: 'A-má', indo: 'Nenek tercinta', tip: 'Nenek penyayang cucu' }
 ]
 
-// 4. Slang Matching Game Data
+// 4. Slang Matching Game Data (10 Pasangan Kata)
 const slangPairs = [
   { id: 1, hokkien: 'Lim kún-chúi', match: 'Minum air matang' },
   { id: 2, hokkien: 'Chin-chia̍h', match: 'Beneran / Serius' },
   { id: 3, hokkien: 'Lo̍k-kho', match: 'Zonk / Kalah telak' },
   { id: 4, hokkien: 'Hó-súi', match: 'Cantik / Keren mantap' },
   { id: 5, hokkien: 'Bô-tī-tô', match: 'Tiba-tiba tanpa sebab' },
-  { id: 6, hokkien: 'Cháu-chhù', match: 'Pulang ke rumah' }
+  { id: 6, hokkien: 'Cháu-chhù', match: 'Pulang ke rumah' },
+  { id: 7, hokkien: 'Thàn-chîⁿ', match: 'Cari cuan / untung' },
+  { id: 8, hokkien: 'Sio̍k', match: 'Murah meriah' },
+  { id: 9, hokkien: 'Hia-tī', match: 'Bro / Sahabat karib' },
+  { id: 10, hokkien: 'Ká-kín', match: 'Cepat / Buruan' }
 ]
 
 // 5. 8 Hokkien Tones with Frequency Audio Pitch Generation
@@ -150,6 +305,7 @@ const hokkienTones = [
 
 export default function PracticePage() {
   const [activeTab, setActiveTab] = useState('quiz')
+  const { showToast } = useToast()
 
   // Quiz state
   const [currentQuiz, setCurrentQuiz] = useState(0)
@@ -228,19 +384,36 @@ export default function PracticePage() {
     setSelectedAnswer(idx)
     const isCorrect = idx === quizQuestions[currentQuiz].correct
     if (isCorrect) {
-      setScore(s => s + 12.5)
-      setStreak(st => st + 1)
+      playSuccess()
+      setScore(s => s + 10)
+      setStreak(st => {
+        const next = st + 1
+        if (next >= 3) {
+          showToast(`🔥 Hebat! Streak ${next}x beruntun!`, 'badge', 2000)
+        }
+        return next
+      })
     } else {
+      playIncorrect()
       setStreak(0)
     }
   }
 
   const handleNextQuiz = () => {
+    playClick()
     if (currentQuiz < quizQuestions.length - 1) {
       setCurrentQuiz(c => c + 1)
       setSelectedAnswer(null)
     } else {
       setQuizFinished(true)
+      triggerConfetti()
+      playFanfare()
+      try {
+        const stats = JSON.parse(localStorage.getItem('hokkien_learning_stats') || '{}')
+        stats.quizzesDone = (stats.quizzesDone || 0) + 1
+        localStorage.setItem('hokkien_learning_stats', JSON.stringify(stats))
+      } catch {}
+      showToast('🏆 Kuis Selesai! Skor tercatat di Kemajuan Belajar.', 'badge', 3500)
     }
   }
 
@@ -249,34 +422,55 @@ export default function PracticePage() {
     if (listenSelected !== null) return
     setListenSelected(idx)
     if (idx === listeningChallenges[listenIdx].correct) {
+      playSuccess()
       setListenScore(s => s + 20)
+      showToast('✨ Benar! Pendengaran Anda sangat teliti.', 'success', 1500)
+    } else {
+      playIncorrect()
     }
   }
 
   const handleNextListening = () => {
+    playClick()
     if (listenIdx < listeningChallenges.length - 1) {
       setListenIdx(l => l + 1)
       setListenSelected(null)
     } else {
       setListenFinished(true)
+      triggerConfetti()
+      playFanfare()
+      showToast('🎧 Tantangan Pendengaran Berhasil!', 'badge', 3500)
     }
   }
 
   // Matching game logic
   const handleHokkienClick = (item) => {
     if (matchedPairs.includes(item.id)) return
+    playClick()
     setSelectedHokkien(item)
   }
 
   const handleMeaningClick = (item) => {
     if (!selectedHokkien) return
     if (selectedHokkien.id === item.id) {
-      setMatchedPairs([...matchedPairs, item.id])
+      playSuccess()
+      const newMatched = [...matchedPairs, item.id]
+      setMatchedPairs(newMatched)
       setSelectedHokkien(null)
+      if (newMatched.length === slangPairs.length) {
+        triggerConfetti()
+        playFanfare()
+        showToast('🎉 Luar Biasa! Semua slang Medan sukses dicocokkan!', 'badge', 4000)
+      } else {
+        showToast(`✅ Cocok: ${selectedHokkien.hokkien}`, 'success', 1200)
+      }
     } else {
+      playIncorrect()
       setSelectedHokkien(null)
+      showToast('❌ Kurang tepat, coba lagi ya!', 'error', 1200)
     }
   }
+
 
   return (
     <div className="practice-page">
@@ -521,7 +715,10 @@ export default function PracticePage() {
 
             <div
               className={`fc-card glass ${fcFlipped ? 'fc-card--flipped' : ''}`}
-              onClick={() => setFcFlipped(!fcFlipped)}
+              onClick={() => {
+                playFlip()
+                setFcFlipped(!fcFlipped)
+              }}
             >
               <div className="fc-card__inner">
                 <div className="fc-card__front">
@@ -551,6 +748,7 @@ export default function PracticePage() {
               <button
                 className="fc-btn fc-btn--review"
                 onClick={() => {
+                  playClick()
                   setFcFlipped(false)
                   setTimeout(() => setFcIndex((fcIndex + 1) % flashcards.length), 200)
                 }}
@@ -560,14 +758,23 @@ export default function PracticePage() {
               <button
                 className="fc-btn fc-btn--known"
                 onClick={() => {
-                  setKnownCount(k => k + 1)
+                  playSuccess()
+                  const nextCount = knownCount + 1
+                  setKnownCount(nextCount)
                   setFcFlipped(false)
+                  showToast(`⭐ "${flashcards[fcIndex].hanji}" ditandai hafal!`, 'success', 1500)
+                  if (nextCount === flashcards.length) {
+                    triggerConfetti()
+                    playFanfare()
+                    showToast('🎉 Selamat! Semua kartu flashcard berhasil dihafal!', 'badge', 3500)
+                  }
                   setTimeout(() => setFcIndex((fcIndex + 1) % flashcards.length), 200)
                 }}
               >
                 Sudah Hafal ✓
               </button>
             </div>
+
           </div>
         )}
 

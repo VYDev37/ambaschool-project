@@ -1,14 +1,34 @@
 import { useState, useRef, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { HiSearch, HiVolumeUp, HiArrowRight, HiBookOpen, HiSparkles, HiTranslate } from 'react-icons/hi'
+import {
+  HiSearch,
+  HiVolumeUp,
+  HiArrowRight,
+  HiBookOpen,
+  HiSparkles,
+  HiTranslate
+} from 'react-icons/hi'
 import { vocabularyList } from '../data/vocabularyData'
+import { playClick } from '../utils/soundEffects'
+import { useToast } from '../context/ToastContext'
 import './DictSearch.css'
+
+const quickSuggestions = [
+  { label: '滾水 Lim kún-chúi', query: 'kún-chúi' },
+  { label: '食飽 Chia̍h-pá', query: 'chia̍h-pá' },
+  { label: '頭家 Thâu-ke', query: 'thâu-ke' },
+  { label: '好水 Hó-súi', query: 'hó-súi' },
+  { label: '俗 Sio̍k (Murah)', query: 'sio̍k' },
+  { label: '七逃 Chhit-thô (Healing)', query: 'chhit-thô' }
+]
 
 export default function DictSearch() {
   const [query, setQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
+  const [playingHanji, setPlayingHanji] = useState(null)
   const inputRef = useRef(null)
+  const { showToast } = useToast()
 
   const results = useMemo(() => {
     if (!query.trim()) return []
@@ -26,13 +46,24 @@ export default function DictSearch() {
   const speak = (e, text) => {
     e.stopPropagation()
     e.preventDefault()
+    setPlayingHanji(text)
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel()
       const u = new SpeechSynthesisUtterance(text)
       u.lang = 'zh-TW'
       u.rate = 0.82
+      u.onend = () => setPlayingHanji(null)
+      u.onerror = () => setPlayingHanji(null)
       window.speechSynthesis.speak(u)
+    } else {
+      setTimeout(() => setPlayingHanji(null), 1000)
     }
+  }
+
+  const handleSuggestionClick = (q) => {
+    playClick()
+    setQuery(q)
+    inputRef.current?.focus()
   }
 
   return (
@@ -49,11 +80,11 @@ export default function DictSearch() {
             <HiBookOpen /> 辭典搜尋 Pencarian Kamus
           </span>
           <h2 className="dict-search-section__title">
-            Cari Kata di <span className="gradient-text">Kamus 10,000+ Entri</span>
+            Cari Kata di <span className="gradient-text">Kamus 13,000+ Entri</span>
           </h2>
           <p className="dict-search-section__subtitle">
             Ketik aksara Han (漢字), romanisasi Hokkien (POJ/Tâi-lô), atau Bahasa Indonesia. 
-            Terinspirasi dari <em>教育部臺灣台語常用詞辭典</em>.
+            Dilengkapi audio pelafalan otentik & dialek Medan.
           </p>
         </motion.div>
 
@@ -78,8 +109,30 @@ export default function DictSearch() {
               className="dict-search-widget__input"
             />
             {query && (
-              <button className="dict-search-widget__clear" onClick={() => setQuery('')}>✕</button>
+              <button
+                className="dict-search-widget__clear"
+                onClick={() => {
+                  setQuery('')
+                  inputRef.current?.focus()
+                }}
+              >
+                ✕
+              </button>
             )}
+          </div>
+
+          {/* Quick Click Suggestion Pills */}
+          <div className="dict-search-widget__pills">
+            <span className="dict-search-widget__pills-label">Coba klik:</span>
+            {quickSuggestions.map(sug => (
+              <button
+                key={sug.query}
+                className="dict-search-pill"
+                onClick={() => handleSuggestionClick(sug.query)}
+              >
+                {sug.label}
+              </button>
+            ))}
           </div>
 
           {/* Search type hints */}
@@ -94,15 +147,17 @@ export default function DictSearch() {
             <div className="dict-search-widget__results">
               {results.map((item, i) => (
                 <Link
-                  to="/dictionary"
+                  to={`/dictionary?q=${encodeURIComponent(item.hanji)}`}
                   key={item.id || i}
                   className="dict-search-result"
+                  onClick={() => playClick()}
                 >
                   <div className="dict-search-result__left">
                     <span className="dict-search-result__hanji chinese-text">{item.hanji}</span>
                     <button
-                      className="dict-search-result__audio"
+                      className={`dict-search-result__audio ${playingHanji === item.hanji ? 'dict-search-result__audio--active' : ''}`}
                       onClick={(e) => speak(e, item.hanji)}
+                      title="Putar pengucapan"
                     >
                       <HiVolumeUp size={14} />
                     </button>
@@ -115,8 +170,9 @@ export default function DictSearch() {
                   </div>
                   <span className="dict-search-result__indo">{item.indo}</span>
                   {(item.dialect?.includes('Medan') || item.tags?.includes('Medan Populer')) && (
-                    <span className="dict-search-result__medan">🇮🇩</span>
+                    <span className="dict-search-result__medan" title="Dialek Medan">🇮🇩 Medan</span>
                   )}
+                  <HiArrowRight className="dict-search-result__arrow" />
                 </Link>
               ))}
             </div>
@@ -126,6 +182,12 @@ export default function DictSearch() {
             <div className="dict-search-widget__empty">
               <span>🔍</span>
               <p>Tidak ditemukan hasil untuk "<strong>{query}</strong>"</p>
+              <Link
+                to={`/dictionary?q=${encodeURIComponent(query)}`}
+                className="dict-search-empty-link"
+              >
+                Cari lebih dalam di Kamus Lengkap →
+              </Link>
             </div>
           )}
         </motion.div>
@@ -138,9 +200,13 @@ export default function DictSearch() {
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
         >
-          <Link to="/dictionary" className="dict-search-cta-btn">
+          <Link
+            to="/dictionary"
+            className="dict-search-cta-btn"
+            onClick={() => playClick()}
+          >
             <HiBookOpen />
-            <span>Buka Kamus Lengkap — 10,000+ Kosakata</span>
+            <span>Buka Kamus Lengkap — 13,000+ Kosakata</span>
             <HiArrowRight />
           </Link>
         </motion.div>

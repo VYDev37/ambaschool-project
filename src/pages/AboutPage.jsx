@@ -1,16 +1,19 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { HiSparkles, HiGlobeAlt, HiBookOpen, HiHeart, HiTranslate } from 'react-icons/hi'
+import { HiSparkles, HiGlobeAlt, HiBookOpen, HiHeart, HiTranslate, HiVolumeUp, HiLightBulb } from 'react-icons/hi'
+import { playClick } from '../utils/soundEffects'
+import { useToast } from '../context/ToastContext'
 import './AboutPage.css'
 
 const loanWords = [
-  { indo: 'Cuan', hokkien: '賺 (thàn)', desc: 'Mendapat keuntungan / uang berlimpah.' },
-  { indo: 'Hoki', hokkien: '福氣 (hok-khì)', desc: 'Keberuntungan atau nasib baik.' },
-  { indo: 'Gue / Lu', hokkien: '我 (góa) / 汝 (lú)', desc: 'Kata ganti orang pertama & kedua yang menjadi bahasa gaul Jakarta.' },
-  { indo: 'Bakmi', hokkien: '肉麵 (bah-mī)', desc: 'Daging cincang dengan mie kuah/kering.' },
-  { indo: 'Kwetiau', hokkien: '粿條 (kóe-tiâu)', desc: 'Mie pipih berbahan tepung beras.' },
-  { indo: 'Tahu / Tauge', hokkien: '豆腐 (tāu-hū) / 豆芽 (tāu-gê)', desc: 'Olahan kedelai dan kecambah kedelai.' },
-  { indo: 'Cepek / Gopek / Ceban', hokkien: '百 (pah) / 萬 (bān)', desc: 'Istilah nominal ratusan dan puluhan ribu yang dipakai luas di pasar.' },
-  { indo: 'Kongkalikong', hokkien: '公家講 (kong-ke kóng)', desc: 'Bersekongkol atau kesepakatan rahasia.' }
+  { indo: 'Cuan', hokkien: '賺 (thàn)', text: '賺', desc: 'Mendapat keuntungan / uang berlimpah.' },
+  { indo: 'Hoki', hokkien: '福氣 (hok-khì)', text: '福氣', desc: 'Keberuntungan atau nasib baik.' },
+  { indo: 'Gue / Lu', hokkien: '我 (góa) / 汝 (lú)', text: '我', desc: 'Kata ganti orang pertama & kedua yang menjadi bahasa gaul Jakarta.' },
+  { indo: 'Bakmi', hokkien: '肉麵 (bah-mī)', text: '肉麵', desc: 'Daging cincang dengan mie kuah/kering.' },
+  { indo: 'Kwetiau', hokkien: '粿條 (kóe-tiâu)', text: '粿條', desc: 'Mie pipih berbahan tepung beras.' },
+  { indo: 'Tahu / Tauge', hokkien: '豆腐 (tāu-hū)', text: '豆腐', desc: 'Olahan kedelai dan kecambah kedelai.' },
+  { indo: 'Cepek / Ceban', hokkien: '百 (pah) / 萬 (bān)', text: '一萬', desc: 'Istilah nominal ratusan dan puluhan ribu yang dipakai luas di pasar.' },
+  { indo: 'Kongkalikong', hokkien: '公家講 (kong-ke kóng)', text: '公家講', desc: 'Bersekongkol atau kesepakatan rahasia.' }
 ]
 
 const dialects = [
@@ -18,29 +21,54 @@ const dialects = [
     name: 'Hokkien Medan',
     region: 'Sumatera Utara, Indonesia',
     base: 'Dialek Zhangzhou (漳州)',
-    desc: 'Banyak menyerap kosakata bahasa Indonesia, Melayu, dan Belanda. Menjadi lingua franca sehari-hari dalam bisnis dan pergaulan multietnis di Medan.'
+    desc: 'Banyak menyerap kosakata bahasa Indonesia, Melayu, dan Belanda. Menjadi lingua franca sehari-hari dalam bisnis dan pergaulan multietnis di Medan.',
+    highlight: 'Khas: Lim kún-chúi, chin-chia̍h, lo̍k-kho'
   },
   {
     name: 'Hokkien Bagansiapiapi & Riau',
     region: 'Riau, Selatpanjang, Tanjungpinang',
     base: 'Dialek Quanzhou (泉州 / Tong-an)',
-    desc: 'Ciri khas aksen lebih berirama dengan vokal sengau yang kental. Sangat murni dan menjadi bahasa utama komunitas nelayan serta perdagangan pesisir.'
+    desc: 'Ciri khas aksen lebih berirama dengan vokal sengau yang kental. Sangat murni dan menjadi bahasa utama komunitas nelayan serta perdagangan pesisir.',
+    highlight: 'Khas: Dialek murni Minnan pesisir'
   },
   {
     name: 'Taiwan Minnan (Tâi-gí)',
     region: 'Taiwan',
     base: 'Campuran Zhangzhou & Quanzhou',
-    desc: 'Memiliki sistem standardisasi Kementerian Pendidikan Taiwan dengan aksara Hanji dan romanisasi Tâi-lô resmi yang kaya karya sastra modern.'
+    desc: 'Memiliki sistem standardisasi Kementerian Pendidikan Taiwan dengan aksara Hanji dan romanisasi Tâi-lô resmi yang kaya karya sastra modern.',
+    highlight: 'Khas: Bahasa resmi berstandar kurikulum MoE'
   },
   {
     name: 'Penang Hokkien',
     region: 'Penang, Malaysia',
     base: 'Zhangzhou + Melayu',
-    desc: 'Sangat mirip dengan Hokkien Medan dengan percampuran kata pinjaman Melayu seperti "tapi", "mana", "senang".'
+    desc: 'Sangat mirip dengan Hokkien Medan dengan percampuran kata pinjaman Melayu seperti "tapi", "mana", "senang".',
+    highlight: 'Khas: Dialek peranakan Selat Malaka'
   }
 ]
 
 export default function AboutPage() {
+  const [playingWord, setPlayingWord] = useState(null)
+  const { showToast } = useToast()
+
+  const speak = (e, text, label) => {
+    e.stopPropagation()
+    playClick()
+    setPlayingWord(text)
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+      const u = new SpeechSynthesisUtterance(text)
+      u.lang = 'zh-TW'
+      u.rate = 0.82
+      u.onend = () => setPlayingWord(null)
+      u.onerror = () => setPlayingWord(null)
+      window.speechSynthesis.speak(u)
+      showToast(`🔊 Pengucapan: ${label} (${text})`, 'info', 1500)
+    } else {
+      setTimeout(() => setPlayingWord(null), 1000)
+    }
+  }
+
   return (
     <div className="about-page">
       <div className="about-hero">
@@ -85,12 +113,12 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Loanwords Section */}
+        {/* Loanwords Section with Audio */}
         <div className="about-loanwords section">
           <div className="about-header-center">
             <span className="about-section-label">Akulturasi Nusantara</span>
             <h2>Kata Hokkien yang Sering Anda Ucapkan Tanpa Disadari</h2>
-            <p>Bahasa Indonesia menyerap begitu banyak istilah Minnan dalam kehidupan sehari-hari:</p>
+            <p>Klik tombol audio untuk mendengarkan lafal aslinya dalam bahasa Hokkien:</p>
           </div>
 
           <div className="loanwords-grid">
@@ -104,8 +132,17 @@ export default function AboutPage() {
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
               >
                 <div className="loanword-card__top">
-                  <span className="loanword-card__indo">{lw.indo}</span>
-                  <span className="loanword-card__hokkien">{lw.hokkien}</span>
+                  <div>
+                    <span className="loanword-card__indo">{lw.indo}</span>
+                    <span className="loanword-card__hokkien">{lw.hokkien}</span>
+                  </div>
+                  <button
+                    className={`loanword-card__audio ${playingWord === lw.text ? 'loanword-card__audio--active' : ''}`}
+                    onClick={(e) => speak(e, lw.text, lw.indo)}
+                    title={`Dengarkan pengucapan Hokkien ${lw.indo}`}
+                  >
+                    <HiVolumeUp size={16} />
+                  </button>
                 </div>
                 <p className="loanword-card__desc">{lw.desc}</p>
               </motion.div>
@@ -127,6 +164,10 @@ export default function AboutPage() {
                 <h3 className="dialect-card__name">{d.name}</h3>
                 <span className="dialect-card__region">📍 {d.region}</span>
                 <p className="dialect-card__desc">{d.desc}</p>
+                <div className="dialect-card__highlight">
+                  <HiLightBulb size={14} />
+                  <span>{d.highlight}</span>
+                </div>
               </div>
             ))}
           </div>

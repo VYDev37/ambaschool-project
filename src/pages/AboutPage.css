@@ -150,14 +150,43 @@
 .loanword-card__top {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-start;
   margin-bottom: var(--space-sm);
+  gap: 8px;
+}
+
+.loanword-card__audio {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.loanword-card__audio:hover {
+  background: var(--primary-500);
+  color: white;
+  transform: scale(1.1);
+}
+
+.loanword-card__audio--active {
+  background: var(--primary-500) !important;
+  color: white !important;
+  animation: audioPulse 1.2s infinite;
 }
 
 .loanword-card__indo {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--primary-300);
+  display: block;
 }
 
 .loanword-card__hokkien {
@@ -171,6 +200,21 @@
   color: var(--neutral-300);
   line-height: 1.5;
 }
+
+.dialect-card__highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-300);
+  background: rgba(240, 180, 41, 0.1);
+  border: 1px solid rgba(240, 180, 41, 0.2);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+}
+
 
 .dialects-grid {
   display: grid;

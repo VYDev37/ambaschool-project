@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   HiSearch,
@@ -27,7 +28,10 @@ import {
   HiAcademicCap
 } from 'react-icons/hi'
 import { vocabularyList, totalVocabCount } from '../data/vocabularyData'
+import { playClick, playSuccess } from '../utils/soundEffects'
+import { useToast } from '../context/ToastContext'
 import './DictionaryPage.css'
+
 
 /* ─── Search mode options (inspired by Taiwan MOE) ─── */
 const searchModes = [
@@ -49,6 +53,9 @@ const categoryIndex = [
   { emoji: '🏥', name: 'Tubuh & Kesehatan', count: 0 },
   { emoji: '🚗', name: 'Kota & Transportasi', count: 0 },
   { emoji: '🏠', name: 'Rumah & Benda', count: 0 },
+  { emoji: '📱', name: 'Teknologi & Modern', count: 0 },
+  { emoji: '📜', name: 'Pepatah & Kiasan', count: 0 },
+  { emoji: '🏮', name: 'Budaya & Adat', count: 0 },
 ]
 
 /* ─── Tone index (like 聲韻調索引) ─── */
@@ -76,6 +83,8 @@ function getWordOfDay() {
 }
 
 export default function DictionaryPage() {
+  const [searchParams] = useSearchParams()
+  const { showToast } = useToast()
   const [searchMode, setSearchMode] = useState('semua')
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -93,6 +102,16 @@ export default function DictionaryPage() {
 
   const wordOfDay = useMemo(() => getWordOfDay(), [])
 
+  // Read URL query parameter ?q=
+  useEffect(() => {
+    const qParam = searchParams.get('q')
+    if (qParam) {
+      setQuery(qParam)
+      setSearchMode('semua')
+      window.scrollTo({ top: 380, behavior: 'smooth' })
+    }
+  }, [searchParams])
+
   // Close dropdown on outside click
   useEffect(() => {
     const handler = (e) => {
@@ -103,6 +122,7 @@ export default function DictionaryPage() {
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [])
+
 
   // Save to localStorage
   useEffect(() => {
@@ -166,9 +186,20 @@ export default function DictionaryPage() {
     }
   }
 
-  const toggleSave = useCallback((id) => {
-    setSavedWords(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
-  }, [])
+  const toggleSave = useCallback((id, item) => {
+    playClick()
+    setSavedWords(prev => {
+      const isSaved = prev.includes(id)
+      if (isSaved) {
+        showToast('Dihapus dari kata tersimpan', 'info', 1500)
+        return prev.filter(x => x !== id)
+      } else {
+        playSuccess()
+        showToast(`⭐ "${item?.hanji || 'Kata'}" disimpan ke koleksi!`, 'badge', 2000)
+        return [...prev, id]
+      }
+    })
+  }, [showToast])
 
   const speak = useCallback((text) => {
     if ('speechSynthesis' in window) {
@@ -181,11 +212,15 @@ export default function DictionaryPage() {
   }, [])
 
   const copyWord = useCallback((item) => {
+    playClick()
     const text = `${item.hanji} (${item.poj}) — ${item.indo}`
-    navigator.clipboard.writeText(text)
-    setCopiedId(item.id)
-    setTimeout(() => setCopiedId(null), 2000)
-  }, [])
+    navigator.clipboard?.writeText(text).then(() => {
+      setCopiedId(item.id)
+      showToast(`📋 Disalin: ${item.hanji} (${item.poj})`, 'success', 2000)
+      setTimeout(() => setCopiedId(null), 2000)
+    })
+  }, [showToast])
+
 
   const activeMode = searchModes.find(m => m.key === searchMode)
 
@@ -518,11 +553,12 @@ export default function DictionaryPage() {
                       <span className="dict-entry__tone-badge">{item.tone}</span>
                       <button
                         className={`dict-entry__save ${isSaved ? 'dict-entry__save--active' : ''}`}
-                        onClick={(e) => { e.stopPropagation(); toggleSave(item.id) }}
+                        onClick={(e) => { e.stopPropagation(); toggleSave(item.id, item) }}
                         title={isSaved ? 'Hapus dari simpanan' : 'Simpan kata ini'}
                       >
                         <HiBookmark size={16} />
                       </button>
+
                       <button
                         className={`dict-entry__copy ${copiedId === item.id ? 'dict-entry__copy--done' : ''}`}
                         onClick={(e) => { e.stopPropagation(); copyWord(item) }}

@@ -1,30 +1,57 @@
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { HiLockClosed, HiCheck, HiArrowRight } from 'react-icons/hi'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Link, useNavigate } from 'react-router-dom'
+import {
+  HiBookOpen,
+  HiArrowRight,
+  HiSparkles,
+  HiBadgeCheck,
+  HiClock,
+  HiPlay,
+  HiCheckCircle
+} from 'react-icons/hi'
+import { coursesModules } from '../data/coursesData'
+import { playClick } from '../utils/soundEffects'
 import './LessonPreview.css'
 
-const lessons = [
-  {
-    level: 'Pemula',
-    lessons: [
-      { id: 1, title: 'Sapaan & Perkenalan', desc: 'Lí hó, Góa sī...', status: 'completed', progress: 100 },
-      { id: 2, title: 'Angka & Bilangan', desc: 'It, jī, saⁿ, sì, gō͘...', status: 'completed', progress: 100 },
-      { id: 3, title: 'Keluarga', desc: 'Pē, bú, hiaⁿ, chí...', status: 'current', progress: 45 },
-      { id: 4, title: 'Warna & Bentuk', desc: 'Âng, n̂g, chheⁿ...', status: 'locked', progress: 0 },
-    ],
-  },
-  {
-    level: 'Menengah',
-    lessons: [
-      { id: 5, title: 'Di Pasar', desc: 'Chia̍h-mi̍h, bé mi̍h...', status: 'locked', progress: 0 },
-      { id: 6, title: 'Arah & Transportasi', desc: 'Chhia, lō͘, tò-pêng...', status: 'locked', progress: 0 },
-      { id: 7, title: 'Di Restoran', desc: 'Chia̍h-pn̄g, lim tê...', status: 'locked', progress: 0 },
-      { id: 8, title: 'Cuaca & Musim', desc: 'Thiⁿ-khì, lo̍h-hō͘...', status: 'locked', progress: 0 },
-    ],
-  },
+const previewCategories = [
+  'Semua Track',
+  'Medan & Nusantara',
+  'Pasar & Transaksi',
+  'Kuliner & Restoran',
+  'Fonetik & Nada',
+  'Keluarga & Adat'
 ]
 
 export default function LessonPreview() {
+  const [activeTab, setActiveTab] = useState('Semua Track')
+  const [completedList, setCompletedList] = useState([])
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('hokkien_completed_lessons')
+      if (saved) {
+        setCompletedList(JSON.parse(saved))
+      }
+    } catch {}
+  }, [])
+
+  const displayedLessons = coursesModules.filter(lesson => {
+    if (activeTab === 'Semua Track') return true
+    if (activeTab === 'Medan & Nusantara') return lesson.category.includes('Medan')
+    return lesson.category === activeTab
+  }).slice(0, 6)
+
+  const handleStartCourse = (lessonId) => {
+    playClick()
+    navigate(`/lessons?moduleId=${lessonId}`)
+  }
+
+  const completedCount = completedList.length
+  const totalModules = coursesModules.length
+  const progressPercent = Math.min(100, Math.round((completedCount / totalModules) * 100))
+
   return (
     <section className="lesson-preview section" id="lessons">
       <div className="container">
@@ -35,83 +62,133 @@ export default function LessonPreview() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
         >
-          <span className="lesson-preview__label">Kurikulum</span>
+          <div className="lesson-preview__tag">
+            <HiSparkles /> 26 Modul Kurikulum Akbar Berstandar
+          </div>
           <h2 className="lesson-preview__title">
-            Jalur Belajar yang{' '}
-            <span className="gradient-text">Terstruktur</span>
+            Kurikulum Pembelajaran <br />
+            <span className="gradient-text">Otentik & Terstruktur</span>
           </h2>
           <p className="lesson-preview__subtitle">
-            Ikuti perjalanan belajar dari dasar hingga mahir. Setiap pelajaran
-            dirancang untuk membangun di atas materi sebelumnya.
+            Dari adab kopitiam Medan memesan <em>"Lim kún-chúi"</em>, tawar-menawar di pasar tradisional,
+            hingga 8 nada kuno Minnan dengan latihan dialog dan kuis interaktif berhadiah badge.
           </p>
+
+          {/* Module Progress Bar */}
+          <div className="lesson-preview__progress-box">
+            <div className="lesson-preview__progress-meta">
+              <span>Kemajuan Kurikulum Anda:</span>
+              <strong>{completedCount} dari {totalModules} Modul Diselesaikan ({progressPercent}%)</strong>
+            </div>
+            <div className="lesson-preview__progress-track">
+              <div
+                className="lesson-preview__progress-fill"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Track selector filter tabs */}
+          <div className="lesson-preview__tabs">
+            {previewCategories.map(tab => (
+              <button
+                key={tab}
+                className={`lesson-preview__tab-btn ${activeTab === tab ? 'lesson-preview__tab-btn--active' : ''}`}
+                onClick={() => {
+                  playClick()
+                  setActiveTab(tab)
+                }}
+              >
+                {tab === 'Medan & Nusantara' && '🇮🇩 '}
+                {tab === 'Pasar & Transaksi' && '🏪 '}
+                {tab === 'Kuliner & Restoran' && '🍜 '}
+                {tab === 'Fonetik & Nada' && '🎶 '}
+                {tab}
+              </button>
+            ))}
+          </div>
         </motion.div>
 
-        <div className="lesson-preview__content">
-          {lessons.map((group, gi) => (
-            <motion.div
-              key={gi}
-              className="lesson-group"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5, delay: gi * 0.15 }}
-            >
-              <div className="lesson-group__header">
-                <span className={`lesson-group__badge lesson-group__badge--${gi === 0 ? 'beginner' : 'intermediate'}`}>
-                  {group.level}
-                </span>
-              </div>
-              <div className="lesson-group__list">
-                {group.lessons.map((lesson, li) => (
-                  <div
-                    key={lesson.id}
-                    className={`lesson-item ${lesson.status === 'locked' ? 'lesson-item--locked' : ''} ${lesson.status === 'current' ? 'lesson-item--current' : ''}`}
-                  >
-                    <div className="lesson-item__status">
-                      {lesson.status === 'completed' && (
-                        <span className="lesson-item__check"><HiCheck /></span>
-                      )}
-                      {lesson.status === 'current' && (
-                        <span className="lesson-item__current-dot" />
-                      )}
-                      {lesson.status === 'locked' && (
-                        <span className="lesson-item__lock"><HiLockClosed /></span>
-                      )}
-                      {li < group.lessons.length - 1 && (
-                        <span className={`lesson-item__line ${lesson.status === 'completed' ? 'lesson-item__line--done' : ''}`} />
-                      )}
-                    </div>
-                    <div className="lesson-item__content">
-                      <h4 className="lesson-item__title">{lesson.title}</h4>
-                      <p className="lesson-item__desc">{lesson.desc}</p>
-                      {lesson.progress > 0 && lesson.progress < 100 && (
-                        <div className="lesson-item__progress">
-                          <div className="lesson-item__progress-bar">
-                            <div
-                              className="lesson-item__progress-fill"
-                              style={{ width: `${lesson.progress}%` }}
-                            />
-                          </div>
-                          <span className="lesson-item__progress-text">{lesson.progress}%</span>
-                        </div>
+        {/* Dynamic Courses Grid */}
+        <div className="lesson-preview__grid">
+          <AnimatePresence mode="popLayout">
+            {displayedLessons.map((lesson, idx) => {
+              const isMedan = lesson.category.includes('Medan') || lesson.track?.includes('Medan')
+              const isDone = completedList.includes(lesson.id)
+
+              return (
+                <motion.div
+                  key={lesson.id}
+                  className={`lesson-card-preview glass ${isMedan ? 'lesson-card-preview--medan' : ''} ${isDone ? 'lesson-card-preview--done' : ''}`}
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.35, delay: idx * 0.08 }}
+                >
+                  <div className="lesson-card-preview__top">
+                    <span className="lesson-card-preview__track">
+                      {isMedan && '🇮🇩 '}
+                      {lesson.category}
+                    </span>
+                    <div className="lesson-card-preview__top-right">
+                      {isDone ? (
+                        <span className="lesson-card-preview__done-badge">
+                          <HiCheckCircle /> Selesai
+                        </span>
+                      ) : (
+                        <span className="lesson-card-preview__duration">
+                          <HiClock /> {lesson.duration}
+                        </span>
                       )}
                     </div>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+
+                  <h3 className="lesson-card-preview__title">{lesson.title}</h3>
+                  <p className="lesson-card-preview__desc">{lesson.subtitle}</p>
+
+                  <div className="lesson-card-preview__cultural-note">
+                    <strong>Wawasan Budaya:</strong> {lesson.culturalNote.slice(0, 110)}...
+                  </div>
+
+                  <div className="lesson-card-preview__badge-reward">
+                    <HiBadgeCheck className="lesson-card-preview__badge-icon" />
+                    <span>Reward: Badge <strong>{lesson.badge}</strong></span>
+                  </div>
+
+                  <div className="lesson-card-preview__footer">
+                    <span className={`lesson-card-preview__level lesson-card-preview__level--${lesson.level.toLowerCase()}`}>
+                      {lesson.level}
+                    </span>
+
+                    <button
+                      className={`lesson-card-preview__action-btn ${isDone ? 'lesson-card-preview__action-btn--review' : ''}`}
+                      onClick={() => handleStartCourse(lesson.id)}
+                    >
+                      <HiPlay />
+                      <span>{isDone ? 'Ulangi Modul' : 'Mulai Modul'}</span>
+                    </button>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </AnimatePresence>
         </div>
 
+        {/* View all 26 courses CTA */}
         <motion.div
           className="lesson-preview__action"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <Link to="/lessons" className="lesson-preview__btn">
-            <span>Lihat Semua Pelajaran</span>
+          <Link
+            to="/lessons"
+            className="lesson-preview__btn"
+            onClick={() => playClick()}
+          >
+            <HiBookOpen />
+            <span>Lihat Semua 26 Modul Kursus & Jalur Belajar</span>
             <HiArrowRight />
           </Link>
         </motion.div>

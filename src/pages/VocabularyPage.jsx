@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   HiSearch,
@@ -9,10 +9,20 @@ import {
   HiFilter,
   HiChevronLeft,
   HiChevronRight,
-  HiLocationMarker
+  HiLocationMarker,
+  HiClipboardCopy,
+  HiCheck,
+  HiLightBulb,
+  HiRefresh,
+  HiViewGrid,
+  HiCollection
 } from 'react-icons/hi'
 import { vocabularyList, totalVocabCount } from '../data/vocabularyData'
+
+import { playClick, playSuccess, playFlip } from '../utils/soundEffects'
+import { useToast } from '../context/ToastContext'
 import './VocabularyPage.css'
+
 
 const categories = [
   'Semua',
@@ -26,7 +36,10 @@ const categories = [
   'Tubuh & Kesehatan',
   'Keluarga & Silsilah',
   'Kota & Transportasi',
-  'Rumah & Benda'
+  'Rumah & Benda',
+  'Teknologi & Modern',
+  'Pepatah & Kiasan',
+  'Budaya & Adat'
 ]
 
 const dialects = [
@@ -35,15 +48,46 @@ const dialects = [
   'Taiwan Standar'
 ]
 
+const toneFilters = [
+  'Semua Nada',
+  'Nada 1',
+  'Nada 2',
+  'Nada 3',
+  'Nada 4',
+  'Nada 5',
+  'Nada 7',
+  'Nada 8'
+]
+
 const PAGE_SIZE = 24
 
 export default function VocabularyPage() {
+  const { showToast } = useToast()
+  const [viewMode, setViewMode] = useState('grid') // 'grid' | 'flashcard'
+
   const [selectedCat, setSelectedCat] = useState('Semua')
   const [selectedDialect, setSelectedDialect] = useState('Semua Dialek')
+  const [selectedTone, setSelectedTone] = useState('Semua Nada')
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [savedWords, setSavedWords] = useState(['Kún-chúi', 'Lim kún-chúi', 'Thâu-ke', 'Pháinn-sè'])
+  const [savedWords, setSavedWords] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hokkien_saved_words')
+      return saved ? JSON.parse(saved) : ['Kún-chúi', 'Lim kún-chúi', 'Thâu-ke', 'Pháinn-sè', 'Chin-chia̍h']
+    } catch {
+      return ['Kún-chúi', 'Lim kún-chúi', 'Thâu-ke', 'Pháinn-sè']
+    }
+  })
   const [showOnlySaved, setShowOnlySaved] = useState(false)
+  const [copiedId, setCopiedId] = useState(null)
+
+  // Flashcard mode state
+  const [flashcardIdx, setFlashcardIdx] = useState(0)
+  const [isFlipped, setIsFlipped] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('hokkien_saved_words', JSON.stringify(savedWords))
+  }, [savedWords])
 
   // Filtered dataset
   const filteredList = useMemo(() => {
@@ -76,19 +120,27 @@ export default function VocabularyPage() {
         return false
       }
 
+      // Tone filter
+      if (selectedTone !== 'Semua Nada') {
+        const toneNum = selectedTone.replace('Nada ', '')
+        if (!item.tone || !item.tone.includes(toneNum)) {
+          return false
+        }
+      }
+
       // Search query
       if (q) {
         const matchHanji = item.hanji.toLowerCase().includes(q)
         const matchPoj = item.poj.toLowerCase().includes(q)
         const matchTailo = item.tailo?.toLowerCase().includes(q)
         const matchIndo = item.indo.toLowerCase().includes(q)
-        const matchUsage = item.usage.toLowerCase().includes(q)
+        const matchUsage = item.usage ? item.usage.toLowerCase().includes(q) : false
         return matchHanji || matchPoj || matchTailo || matchIndo || matchUsage
       }
 
       return true
     })
-  }, [query, selectedCat, selectedDialect, showOnlySaved, savedWords])
+  }, [query, selectedCat, selectedDialect, selectedTone, showOnlySaved, savedWords])
 
   // Pagination calculation
   const totalPages = Math.ceil(filteredList.length / PAGE_SIZE) || 1
@@ -105,11 +157,24 @@ export default function VocabularyPage() {
   }
 
   const toggleSave = (poj) => {
+    playClick()
     if (savedWords.includes(poj)) {
       setSavedWords(savedWords.filter(w => w !== poj))
+      showToast('Dihapus dari kata tersimpan', 'info', 1500)
     } else {
       setSavedWords([...savedWords, poj])
+      playSuccess()
+      showToast(`⭐ "${poj}" disimpan ke kosakata favorit!`, 'badge', 2000)
     }
+  }
+
+  const copyWord = (text, id) => {
+    playClick()
+    navigator.clipboard?.writeText(text).then(() => {
+      setCopiedId(id)
+      showToast(`📋 Disalin: ${text}`, 'success', 1500)
+      setTimeout(() => setCopiedId(null), 1500)
+    })
   }
 
   const speak = (hanji) => {
@@ -122,6 +187,29 @@ export default function VocabularyPage() {
     }
   }
 
+  // Flashcard helpers
+  const currentCard = filteredList[flashcardIdx % (filteredList.length || 1)]
+
+  const nextCard = () => {
+    playClick()
+    setIsFlipped(false)
+    setFlashcardIdx(prev => (prev + 1) % filteredList.length)
+  }
+
+  const prevCard = () => {
+    playClick()
+    setIsFlipped(false)
+    setFlashcardIdx(prev => (prev - 1 + filteredList.length) % filteredList.length)
+  }
+
+  const randomCard = () => {
+    playClick()
+    setIsFlipped(false)
+    const r = Math.floor(Math.random() * filteredList.length)
+    setFlashcardIdx(r)
+  }
+
+
   return (
     <div className="vocab-page">
       {/* Hero Header */}
@@ -129,7 +217,7 @@ export default function VocabularyPage() {
         <div className="container">
           <div className="vocab-hero__content">
             <span className="vocab-hero__tag">
-              <HiSparkles /> Database Akbar 10,000+ Kosakata
+              <HiSparkles /> Database Akbar 13,000+ Kosakata
             </span>
             <h1 className="vocab-hero__title">
               Kamus Lengkap <span className="gradient-text">Taiwan & Medan</span>
@@ -174,6 +262,26 @@ export default function VocabularyPage() {
           </button>
         </div>
 
+        {/* View Mode Toggle Bar (Grid vs Flashcard) */}
+        <div className="vocab-view-mode-bar">
+          <div className="vocab-view-mode-tabs">
+            <button
+              className={`vocab-view-mode-btn ${viewMode === 'grid' ? 'vocab-view-mode-btn--active' : ''}`}
+              onClick={() => setViewMode('grid')}
+            >
+              <HiViewGrid size={18} />
+              <span>Mode Daftar Kamus</span>
+            </button>
+            <button
+              className={`vocab-view-mode-btn ${viewMode === 'flashcard' ? 'vocab-view-mode-btn--active' : ''}`}
+              onClick={() => { setViewMode('flashcard'); setIsFlipped(false) }}
+            >
+              <HiCollection size={18} />
+              <span>Mode Flashcard Latihan</span>
+            </button>
+          </div>
+        </div>
+
         {/* Toolbar: Search, Filters & Bookmarks */}
         <div className="vocab-toolbar">
           <div className="vocab-search-row">
@@ -186,6 +294,7 @@ export default function VocabularyPage() {
                 onChange={(e) => {
                   setQuery(e.target.value)
                   setCurrentPage(1)
+                  setFlashcardIdx(0)
                 }}
                 className="vocab-search-box__input"
               />
@@ -197,7 +306,7 @@ export default function VocabularyPage() {
                     setCurrentPage(1)
                   }}
                 >
-                  Batal
+                  ✕
                 </button>
               )}
             </div>
@@ -219,7 +328,23 @@ export default function VocabularyPage() {
               </select>
             </div>
 
-            {/* Bookmark button */}
+            {/* Tone Selector */}
+            <div className="vocab-dialect-select">
+              <select
+                value={selectedTone}
+                onChange={(e) => {
+                  setSelectedTone(e.target.value)
+                  setCurrentPage(1)
+                }}
+                className="vocab-select-input"
+              >
+                {toneFilters.map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Bookmark toggle button */}
             <button
               className={`vocab-saved-toggle ${showOnlySaved ? 'vocab-saved-toggle--active' : ''}`}
               onClick={() => {
@@ -255,97 +380,185 @@ export default function VocabularyPage() {
             <span>Ditemukan <strong>{filteredList.length.toLocaleString()}</strong> entri kosakata</span>
             {selectedCat !== 'Semua' && <span className="vocab-active-tag"> • {selectedCat}</span>}
             {selectedDialect !== 'Semua Dialek' && <span className="vocab-active-tag"> • {selectedDialect}</span>}
+            {selectedTone !== 'Semua Nada' && <span className="vocab-active-tag"> • {selectedTone}</span>}
           </div>
-          <span className="vocab-page-indicator">
-            Halaman {currentPage} dari {totalPages}
-          </span>
+          {viewMode === 'grid' && (
+            <span className="vocab-page-indicator">
+              Halaman {currentPage} dari {totalPages}
+            </span>
+          )}
         </div>
 
-        {/* Vocabulary Grid */}
-        <div className="vocab-cards-grid">
-          <AnimatePresence mode="popLayout">
-            {paginatedItems.map((item, index) => {
-              const isSaved = savedWords.includes(item.poj)
-              const isMedan = item.dialect?.includes('Medan') || item.tags?.includes('Medan Populer')
+        {/* 1. FLASHCARD MODE */}
+        {viewMode === 'flashcard' && currentCard && (
+          <div className="flashcard-container">
+            <motion.div
+              key={flashcardIdx}
+              className={`flashcard-box glass ${isFlipped ? 'flashcard-box--flipped' : ''}`}
+              onClick={() => setIsFlipped(!isFlipped)}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div className="flashcard-box__meta">
+                <span className="flashcard-box__tag">{currentCard.category}</span>
+                <span className="flashcard-box__count">
+                  {flashcardIdx + 1} / {filteredList.length}
+                </span>
+              </div>
 
-              return (
-                <motion.div
-                  key={item.id || `${item.hanji}-${index}`}
-                  className={`vcard glass ${isMedan ? 'vcard--medan' : ''}`}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.2, delay: (index % 12) * 0.02 }}
-                >
-                  <div className="vcard__top">
-                    <div className="vcard__badges">
-                      <span className="vcard__category">{item.category}</span>
-                      {isMedan && (
-                        <span className="vcard__badge-medan" title="Khas Hokkien Medan & Sekitarnya">
-                          🇮🇩 Medan
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      className={`vcard__bookmark ${isSaved ? 'vcard__bookmark--active' : ''}`}
-                      onClick={() => toggleSave(item.poj)}
-                      title={isSaved ? 'Hapus bookmark' : 'Simpan kata'}
-                    >
-                      <HiBookmark />
-                    </button>
-                  </div>
-
-                  <div className="vcard__head">
-                    <span className="vcard__hanji chinese-text">{item.hanji}</span>
-                    <div className="vcard__title-meta">
-                      <span className="vcard__poj">{item.poj}</span>
-                      {item.tailo && item.tailo !== item.poj && (
-                        <span className="vcard__tailo">Tâi-lô: {item.tailo}</span>
-                      )}
-                      <span className="vcard__tone">{item.tone}</span>
-                    </div>
-                    <button
-                      className="vcard__audio-btn"
-                      onClick={() => speak(item.hanji)}
-                      title="Dengarkan pengucapan"
-                    >
-                      <HiVolumeUp size={18} />
-                    </button>
-                  </div>
-
-                  <div className="vcard__meaning">
-                    <span className="vcard__indo">{item.indo}</span>
-                  </div>
-
-                  {item.example && (
-                    <div className="vcard__example-box">
-                      <span className="vcard__example-label">Contoh Kalimat:</span>
-                      <p className="vcard__example-text">{item.example}</p>
-                    </div>
+              {!isFlipped ? (
+                <div className="flashcard-box__front">
+                  <span className="flashcard-box__hanji chinese-text">{currentCard.hanji}</span>
+                  <button
+                    className="flashcard-box__audio-btn"
+                    onClick={(e) => { e.stopPropagation(); speak(currentCard.hanji) }}
+                    title="Dengar pelafalan"
+                  >
+                    <HiVolumeUp size={24} />
+                  </button>
+                  <span className="flashcard-box__instruction">Ketuk kartu untuk melihat arti & cara baca</span>
+                </div>
+              ) : (
+                <div className="flashcard-box__back">
+                  <span className="flashcard-box__poj">{currentCard.poj}</span>
+                  {currentCard.tailo && (
+                    <span className="flashcard-box__tailo">Tâi-lô: {currentCard.tailo}</span>
                   )}
-
-                  <div className="vcard__note">
-                    <HiInformationCircle className="vcard__note-icon" />
-                    <span>{item.usage}</span>
+                  <h3 className="flashcard-box__indo">{currentCard.indo}</h3>
+                  <div className="flashcard-box__details">
+                    {currentCard.example && (
+                      <p className="flashcard-box__example">Contoh: "{currentCard.example}"</p>
+                    )}
+                    <span className="flashcard-box__usage">{currentCard.usage}</span>
                   </div>
-                </motion.div>
-              )
-            })}
-          </AnimatePresence>
-        </div>
+                  <button
+                    className="flashcard-box__audio-btn"
+                    onClick={(e) => { e.stopPropagation(); speak(currentCard.hanji) }}
+                    title="Dengar pelafalan"
+                  >
+                    <HiVolumeUp size={22} />
+                  </button>
+                </div>
+              )}
+            </motion.div>
+
+            {/* Flashcard Controls */}
+            <div className="flashcard-controls">
+              <button className="flashcard-nav-btn" onClick={prevCard} disabled={filteredList.length <= 1}>
+                <HiChevronLeft size={22} /> Kartu Sebelumnya
+              </button>
+              <button className="flashcard-shuffle-btn" onClick={randomCard} title="Kartu Acak">
+                <HiRefresh size={20} /> Acak
+              </button>
+              <button className="flashcard-nav-btn" onClick={nextCard} disabled={filteredList.length <= 1}>
+                Kartu Berikutnya <HiChevronRight size={22} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* 2. GRID LIST MODE */}
+        {viewMode === 'grid' && (
+          <div className="vocab-cards-grid">
+            <AnimatePresence mode="popLayout">
+              {paginatedItems.map((item, index) => {
+                const isSaved = savedWords.includes(item.poj)
+                const isMedan = item.dialect?.includes('Medan') || item.tags?.includes('Medan Populer')
+
+                return (
+                  <motion.div
+                    key={item.id || `${item.hanji}-${index}`}
+                    className={`vcard glass ${isMedan ? 'vcard--medan' : ''}`}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2, delay: (index % 12) * 0.02 }}
+                  >
+                    <div className="vcard__top">
+                      <div className="vcard__badges">
+                        <span className="vcard__category">{item.category}</span>
+                        {isMedan && (
+                          <span className="vcard__badge-medan" title="Khas Hokkien Medan & Sekitarnya">
+                            🇮🇩 Medan
+                          </span>
+                        )}
+                      </div>
+                      <div className="vcard__top-actions">
+                        <button
+                          className="vcard__copy-btn"
+                          onClick={() => copyWord(`${item.hanji} (${item.poj}) - ${item.indo}`, item.id || index)}
+                          title="Salin kata"
+                        >
+                          {copiedId === (item.id || index) ? (
+                            <HiCheck size={16} color="#4ade80" />
+                          ) : (
+                            <HiClipboardCopy size={16} />
+                          )}
+                        </button>
+                        <button
+                          className={`vcard__bookmark ${isSaved ? 'vcard__bookmark--active' : ''}`}
+                          onClick={() => toggleSave(item.poj)}
+                          title={isSaved ? 'Hapus bookmark' : 'Simpan kata'}
+                        >
+                          <HiBookmark />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="vcard__head">
+                      <span className="vcard__hanji chinese-text">{item.hanji}</span>
+                      <div className="vcard__title-meta">
+                        <span className="vcard__poj">{item.poj}</span>
+                        {item.tailo && item.tailo !== item.poj && (
+                          <span className="vcard__tailo">Tâi-lô: {item.tailo}</span>
+                        )}
+                        <span className="vcard__tone">{item.tone}</span>
+                      </div>
+                      <button
+                        className="vcard__audio-btn"
+                        onClick={() => speak(item.hanji)}
+                        title="Dengarkan pengucapan"
+                      >
+                        <HiVolumeUp size={18} />
+                      </button>
+                    </div>
+
+                    <div className="vcard__meaning">
+                      <span className="vcard__indo">{item.indo}</span>
+                    </div>
+
+                    {item.example && (
+                      <div className="vcard__example-box">
+                        <span className="vcard__example-label">Contoh Kalimat:</span>
+                        <p className="vcard__example-text">{item.example}</p>
+                      </div>
+                    )}
+
+                    <div className="vcard__note">
+                      <HiInformationCircle className="vcard__note-icon" />
+                      <span>{item.usage}</span>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </AnimatePresence>
+          </div>
+        )}
 
         {/* Empty State */}
         {filteredList.length === 0 && (
           <div className="vocab-empty glass">
             <span className="vocab-empty__icon">🔍</span>
             <h3>Tidak ada kosakata yang cocok</h3>
-            <p>Coba gunakan kata kunci lain atau reset filter kategori.</p>
+            <p>Coba gunakan kata kunci lain atau reset filter kategori & nada.</p>
             <button
               className="vocab-empty__btn"
               onClick={() => {
                 setQuery('')
                 setSelectedCat('Semua')
                 setSelectedDialect('Semua Dialek')
+                setSelectedTone('Semua Nada')
                 setShowOnlySaved(false)
               }}
             >
@@ -355,7 +568,7 @@ export default function VocabularyPage() {
         )}
 
         {/* Pagination Bar */}
-        {totalPages > 1 && (
+        {viewMode === 'grid' && totalPages > 1 && (
           <div className="vocab-pagination">
             <button
               className="vocab-page-btn"
