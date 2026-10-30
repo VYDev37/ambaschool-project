@@ -109,7 +109,7 @@ export default function Hero(): React.ReactElement {
           transition={{ duration: 0.6 }}
         >
           <span className="hero__badge-dot" />
-          <span>Platform Belajar Bahasa Hokkien #1 di Indonesia • 13,000+ Kosakata & 26 Kursus</span>
+          <span>Platform Belajar Bahasa Hokkien Gratis di Indonesia • 13,000+ Kosakata & 26 Kursus</span>
         </motion.div>
 
         <motion.h1
