@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { HiRefresh } from 'react-icons/hi'
 import {
   useVocabularyStore,
   selectVocabularyItems,
@@ -12,10 +11,11 @@ import {
 } from '../store/UserProgressStore'
 import { useDebounce } from '../hooks/useDebounce'
 import { VocabularyHero } from '../components/vocabulary/VocabularyHero'
+import { VocabularySpotlight } from '../components/vocabulary/VocabularySpotlight'
 import { VocabularyFilters } from '../components/vocabulary/VocabularyFilters'
 import { VocabularyCard } from '../components/vocabulary/VocabularyCard'
 import { VocabularyFlashcard } from '../components/vocabulary/VocabularyFlashcard'
-import { DictionaryPagination } from '../components/dictionary/DictionaryPagination'
+import { VocabularyPagination } from '../components/vocabulary/VocabularyPagination'
 import './VocabularyPage.css'
 
 const PAGE_SIZE = 24
@@ -67,7 +67,10 @@ export default function VocabularyPage(): React.ReactElement {
       }
 
       if (selectedCat === 'Hokkien Medan Populer') {
-        if (!item.tags?.includes('Medan Populer') && !item.dialect.includes('Medan')) {
+        if (
+          !item.tags?.includes('Medan Populer') &&
+          !item.dialect.includes('Medan')
+        ) {
           return false
         }
       } else if (selectedCat !== 'Semua' && item.category !== selectedCat) {
@@ -120,46 +123,56 @@ export default function VocabularyPage(): React.ReactElement {
 
   return (
     <div className="vocab-page">
-      <VocabularyHero
-        totalCount={items.length || 13200}
-        onFilterMedan={() => {
-          setSelectedCat('Hokkien Medan Populer')
-          setSelectedDialect('Hokkien Medan & Nusantara')
-          setCurrentPage(1)
-        }}
-      />
+      <VocabularyHero totalCount={items.length || 13200} />
 
       <div className="container vocab-main">
+        <VocabularySpotlight
+          isActive={selectedCat === 'Hokkien Medan Populer'}
+          onFilterMedan={() => {
+            setSelectedCat('Hokkien Medan Populer')
+            setSelectedDialect('Hokkien Medan & Nusantara')
+            setCurrentPage(1)
+            setFlashcardIdx(0)
+          }}
+        />
+
         <VocabularyFilters
           query={query}
           onQueryChange={(q) => {
             setQuery(q)
             setCurrentPage(1)
+            setFlashcardIdx(0)
           }}
           selectedCat={selectedCat}
           onSelectCat={(cat) => {
             setSelectedCat(cat)
             setCurrentPage(1)
+            setFlashcardIdx(0)
           }}
           selectedDialect={selectedDialect}
           onSelectDialect={(d) => {
             setSelectedDialect(d)
             setCurrentPage(1)
+            setFlashcardIdx(0)
           }}
           selectedTone={selectedTone}
           onSelectTone={(t) => {
             setSelectedTone(t)
             setCurrentPage(1)
+            setFlashcardIdx(0)
           }}
           showOnlySaved={showOnlySaved}
           onToggleShowOnlySaved={() => {
             setShowOnlySaved(!showOnlySaved)
             setCurrentPage(1)
+            setFlashcardIdx(0)
           }}
           savedCount={savedPojList.length}
           viewMode={viewMode}
           onViewModeChange={(m) => setViewMode(m)}
           filteredCount={filteredList.length}
+          currentPage={currentPage}
+          totalPages={totalPages}
         />
 
         {/* View mode 1: Flashcard */}
@@ -190,11 +203,11 @@ export default function VocabularyPage(): React.ReactElement {
 
         {/* View mode 2: Grid */}
         {viewMode === 'grid' && (
-          <div className="vocab-grid">
+          <div className="vocab-cards-grid">
             <AnimatePresence mode="popLayout">
               {paginatedItems.map((item, index) => (
                 <VocabularyCard
-                  key={item.id}
+                  key={item.id || `${item.hanji}-${index}`}
                   item={item}
                   index={index}
                   onSpeak={speak}
@@ -207,12 +220,12 @@ export default function VocabularyPage(): React.ReactElement {
         {/* Empty state */}
         {filteredList.length === 0 && !isLoading && (
           <div className="vocab-empty glass">
-            <span>🔍</span>
+            <span className="vocab-empty__icon">🔍</span>
             <h3>Tidak ada kosakata yang cocok</h3>
             <p>Cobalah mengganti kata pencarian atau ubah filter dialek dan kategori.</p>
             <button
               type="button"
-              className="vocab-empty-reset"
+              className="vocab-empty__btn"
               onClick={() => {
                 setQuery('')
                 setSelectedCat('Semua')
@@ -220,16 +233,17 @@ export default function VocabularyPage(): React.ReactElement {
                 setSelectedTone('Semua Nada')
                 setShowOnlySaved(false)
                 setCurrentPage(1)
+                setFlashcardIdx(0)
               }}
             >
-              <HiRefresh /> Reset Semua Filter
+              Tampilkan Semua Kosakata
             </button>
           </div>
         )}
 
         {/* Pagination */}
         {viewMode === 'grid' && (
-          <DictionaryPagination
+          <VocabularyPagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(page) => {

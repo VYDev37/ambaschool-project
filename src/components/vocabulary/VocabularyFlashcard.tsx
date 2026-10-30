@@ -2,15 +2,12 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import {
   HiVolumeUp,
-  HiBookmark,
   HiChevronLeft,
   HiChevronRight,
   HiRefresh
 } from 'react-icons/hi'
 import { VocabularyItem } from '../../schemas/VocabularySchema'
-import { useUserProgressStore } from '../../store/UserProgressStore'
-import { playClick, playSuccess, playFlip } from '../../utils/soundEffects'
-import { useToast } from '../../store/ToastStore'
+import { playFlip } from '../../utils/soundEffects'
 
 interface VocabularyFlashcardProps {
   card: VocabularyItem
@@ -35,103 +32,102 @@ export const VocabularyFlashcard: React.FC<VocabularyFlashcardProps> = ({
   onRandom,
   onSpeak
 }) => {
-  const { showToast } = useToast()
-  const isSaved = useUserProgressStore((state) => state.isWordSaved(card.poj))
-  const toggleSaveWord = useUserProgressStore((state) => state.toggleSaveWord)
-
-  const handleToggleSave = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    const willBeSaved = toggleSaveWord(card.poj)
-    if (willBeSaved) {
-      playSuccess()
-      showToast(`⭐ "${card.poj}" disimpan!`, 'badge', 2000)
-    } else {
-      playClick()
-      showToast('Dihapus dari kata tersimpan', 'info', 1500)
-    }
-  }
-
   const handleCardClick = () => {
     playFlip()
     onToggleFlip()
   }
 
   return (
-    <div className="vocab-flashcard-wrap">
-      <div className="vocab-flashcard-controls-top">
-        <span className="vocab-flashcard-counter">
-          Kartu {index + 1} dari {total}
-        </span>
-        <button
-          type="button"
-          className="vocab-flashcard-shuffle"
-          onClick={onRandom}
-        >
-          <HiRefresh /> Acak
-        </button>
-      </div>
-
-      <div
-        className={`vocab-flashcard ${isFlipped ? 'vocab-flashcard--flipped' : ''}`}
+    <div className="flashcard-container">
+      <motion.div
+        key={`${card.hanji}-${index}`}
+        className={`flashcard-box glass ${isFlipped ? 'flashcard-box--flipped' : ''}`}
         onClick={handleCardClick}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.25 }}
       >
-        <div className="vocab-flashcard__inner">
-          {/* Front */}
-          <div className="vocab-flashcard__front glass">
-            <span className="vocab-flashcard__badge">{card.category}</span>
-            <span className="vocab-flashcard__hanji chinese-text">{card.hanji}</span>
-            <span className="vocab-flashcard__hint">
-              Klik kartu untuk melihat pengucapan & arti
-            </span>
+        <div className="flashcard-box__meta">
+          <span className="flashcard-box__tag">{card.category}</span>
+          <span className="flashcard-box__count">
+            {index + 1} / {total}
+          </span>
+        </div>
+
+        {!isFlipped ? (
+          <div className="flashcard-box__front">
+            <span className="flashcard-box__hanji chinese-text">{card.hanji}</span>
             <button
               type="button"
-              className="vocab-flashcard__audio"
+              className="flashcard-box__audio-btn"
               onClick={(e) => {
                 e.stopPropagation()
                 onSpeak(card.hanji)
               }}
+              title="Dengar pelafalan"
             >
-              <HiVolumeUp size={18} /> Dengarkan
+              <HiVolumeUp size={24} />
+            </button>
+            <span className="flashcard-box__instruction">
+              Ketuk kartu untuk melihat arti & cara baca
+            </span>
+          </div>
+        ) : (
+          <div className="flashcard-box__back">
+            <span className="flashcard-box__poj">{card.poj}</span>
+            {card.tailo && card.tailo !== card.poj && (
+              <span className="flashcard-box__tailo">Tâi-lô: {card.tailo}</span>
+            )}
+            <h3 className="flashcard-box__indo">{card.indo}</h3>
+            {(card.example || card.usage) && (
+              <div className="flashcard-box__details">
+                {card.example && (
+                  <p className="flashcard-box__example">Contoh: "{card.example}"</p>
+                )}
+                {card.usage && (
+                  <span className="flashcard-box__usage">{card.usage}</span>
+                )}
+              </div>
+            )}
+            <button
+              type="button"
+              className="flashcard-box__audio-btn"
+              onClick={(e) => {
+                e.stopPropagation()
+                onSpeak(card.hanji)
+              }}
+              title="Dengar pelafalan"
+            >
+              <HiVolumeUp size={22} />
             </button>
           </div>
+        )}
+      </motion.div>
 
-          {/* Back */}
-          <div className="vocab-flashcard__back glass">
-            <div className="vocab-flashcard__actions">
-              <button
-                type="button"
-                className={`vocab-flashcard__save ${
-                  isSaved ? 'vocab-flashcard__save--active' : ''
-                }`}
-                onClick={handleToggleSave}
-              >
-                <HiBookmark size={18} />
-              </button>
-            </div>
-            <span className="vocab-flashcard__hanji-small chinese-text">
-              {card.hanji}
-            </span>
-            <h2 className="vocab-flashcard__poj">{card.poj}</h2>
-            {card.tailo && card.tailo !== card.poj && (
-              <span className="vocab-flashcard__tailo">Tâi-lô: {card.tailo}</span>
-            )}
-            <p className="vocab-flashcard__indo">{card.indo}</p>
-            {card.example && (
-              <p className="vocab-flashcard__example">{card.example}</p>
-            )}
-            <span className="vocab-flashcard__flip-hint">
-              Klik untuk membalik kartu
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="vocab-flashcard-nav">
-        <button type="button" className="vocab-flashcard-nav-btn" onClick={onPrev}>
-          <HiChevronLeft size={20} /> Sebelumnya
+      <div className="flashcard-controls">
+        <button
+          type="button"
+          className="flashcard-nav-btn"
+          onClick={onPrev}
+          disabled={total <= 1}
+        >
+          <HiChevronLeft size={22} /> Kartu Sebelumnya
         </button>
-        <button type="button" className="vocab-flashcard-nav-btn" onClick={onNext}>
-          Berikutnya <HiChevronRight size={20} />
+        <button
+          type="button"
+          className="flashcard-shuffle-btn"
+          onClick={onRandom}
+          title="Kartu Acak"
+        >
+          <HiRefresh size={20} /> Acak
+        </button>
+        <button
+          type="button"
+          className="flashcard-nav-btn"
+          onClick={onNext}
+          disabled={total <= 1}
+        >
+          Kartu Berikutnya <HiChevronRight size={22} />
         </button>
       </div>
     </div>

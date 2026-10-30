@@ -5,7 +5,6 @@ import {
   HiBookmark,
   HiClipboardCopy,
   HiCheck,
-  HiBookOpen,
   HiInformationCircle
 } from 'react-icons/hi'
 import { VocabularyItem } from '../../schemas/VocabularySchema'
@@ -40,7 +39,7 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
       showToast(`⭐ "${item.poj}" disimpan ke kosakata!`, 'badge', 2000)
     } else {
       playClick()
-      showToast(`Dihapus dari kata tersimpan`, 'info', 1500)
+      showToast('Dihapus dari kata tersimpan', 'info', 1500)
     }
   }
 
@@ -56,85 +55,87 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
 
   return (
     <motion.div
-      className={`vocab-card glass ${isMedan ? 'vocab-card--medan' : ''}`}
+      key={item.id || `${item.hanji}-${index}`}
+      className={`vcard glass ${isMedan ? 'vcard--medan' : ''}`}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.25, delay: (index % 12) * 0.02 }}
-      layout
+      transition={{ duration: 0.2, delay: (index % 12) * 0.02 }}
     >
-      <div className="vocab-card__top">
-        <div className="vocab-card__badges">
-          <span className="vocab-badge vocab-badge--cat">{item.category}</span>
+      <div className="vcard__top">
+        <div className="vcard__badges">
+          <span className="vcard__category">{item.category}</span>
           {isMedan && (
-            <span className="vocab-badge vocab-badge--medan">🇮🇩 Medan</span>
-          )}
-          {item.tone && (
-            <span className="vocab-badge vocab-badge--tone">{item.tone}</span>
+            <span
+              className="vcard__badge-medan"
+              title="Khas Hokkien Medan & Sekitarnya"
+            >
+              🇮🇩 Medan
+            </span>
           )}
         </div>
-        <div className="vocab-card__quick-actions">
+        <div className="vcard__top-actions">
           <button
             type="button"
-            className={`vocab-card__action-btn ${
-              isSaved ? 'vocab-card__action-btn--saved' : ''
+            className="vcard__copy-btn"
+            onClick={handleCopy}
+            title="Salin kata"
+          >
+            {copied ? (
+              <HiCheck size={16} color="#4ade80" />
+            ) : (
+              <HiClipboardCopy size={16} />
+            )}
+          </button>
+          <button
+            type="button"
+            className={`vcard__bookmark ${
+              isSaved ? 'vcard__bookmark--active' : ''
             }`}
             onClick={handleToggleSave}
             title={isSaved ? 'Hapus bookmark' : 'Simpan kata'}
           >
-            <HiBookmark size={15} />
-          </button>
-          <button
-            type="button"
-            className="vocab-card__action-btn"
-            onClick={handleCopy}
-            title="Salin kata"
-          >
-            {copied ? <HiCheck size={14} /> : <HiClipboardCopy size={14} />}
+            <HiBookmark />
           </button>
         </div>
       </div>
 
-      <div className="vocab-card__body">
-        <div className="vocab-card__characters">
-          <span className="vocab-card__hanji chinese-text">{item.hanji}</span>
-          <button
-            type="button"
-            className="vocab-card__audio-btn"
-            onClick={() => onSpeak(item.hanji)}
-            title="Dengarkan pengucapan"
-          >
-            <HiVolumeUp size={16} />
-          </button>
-        </div>
-
-        <div className="vocab-card__pronounce">
-          <span className="vocab-card__poj">{item.poj}</span>
+      <div className="vcard__head">
+        <span className="vcard__hanji chinese-text">{item.hanji}</span>
+        <div className="vcard__title-meta">
+          <span className="vcard__poj">{item.poj}</span>
           {item.tailo && item.tailo !== item.poj && (
-            <span className="vocab-card__tailo">Tâi-lô: {item.tailo}</span>
+            <span className="vcard__tailo">Tâi-lô: {item.tailo}</span>
           )}
+          {item.tone && <span className="vcard__tone">{item.tone}</span>}
         </div>
-
-        <p className="vocab-card__indo">{item.indo}</p>
-
-        {item.example && (
-          <div className="vocab-card__example-box">
-            <HiBookOpen className="vocab-card__example-icon" />
-            <p className="vocab-card__example-text">{item.example}</p>
-          </div>
-        )}
-
-        {item.usage && (
-          <div className="vocab-card__usage-box">
-            <HiInformationCircle className="vocab-card__usage-icon" />
-            <span className="vocab-card__usage-text">{item.usage}</span>
-          </div>
-        )}
+        <button
+          type="button"
+          className="vcard__audio-btn"
+          onClick={() => onSpeak(item.hanji)}
+          title="Dengarkan pengucapan"
+        >
+          <HiVolumeUp size={18} />
+        </button>
       </div>
 
-      <div className="vocab-card__footer">
-        <span className="vocab-card__dialect-info">🗣️ {item.dialect}</span>
+      <div className="vcard__meaning">
+        <span className="vcard__indo">{item.indo}</span>
       </div>
+
+      {item.example && (
+        <div className="vcard__example-box">
+          <span className="vcard__example-label">Contoh Kalimat:</span>
+          <p className="vcard__example-text">{item.example}</p>
+        </div>
+      )}
+
+      {item.usage && (
+        <div className="vcard__note">
+          <HiInformationCircle className="vcard__note-icon" />
+          <span>{item.usage}</span>
+        </div>
+      )}
     </motion.div>
   )
 }
