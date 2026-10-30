@@ -1,4 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Noto Sans TC', 'Songti SC', 'SimSun', serif;
+  --font-chinese: 'Noto Sans TC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #ffe1e1;
+  --color-primary-200: #ffc8c8;
+  --color-primary-300: #ffa3a3;
+  --color-primary-400: #ff6b6b;
+  --color-primary-500: #e63946;
+  --color-primary-600: #cc2936;
+  --color-primary-700: #ab1f2b;
+  --color-primary-800: #8e1c27;
+  --color-primary-900: #771d26;
+
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fff3c4;
+  --color-accent-200: #fce588;
+  --color-accent-300: #f7d154;
+  --color-accent-400: #f0b429;
+  --color-accent-500: #de911d;
+  --color-accent-600: #cb6e17;
+  --color-accent-700: #a44e0e;
+  --color-accent-800: #8a3c0f;
+  --color-accent-900: #743210;
+}
 
 /* ===== Design Tokens ===== */
 :root {

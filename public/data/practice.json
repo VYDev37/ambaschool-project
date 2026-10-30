@@ -1,0 +1,190 @@
+{
+  "quizQuestions": [
+    {
+      "id": 1,
+      "question": "Di kedai kopi Medan, ungkapan \"Lim kún-chúi\" (飲滾水) berarti...",
+      "options": [
+        "Minum air mentah dari keran",
+        "Minum air putih yang sudah dimasak mendidih",
+        "Minum kopi luwak kental",
+        "Membeli es kelapa muda"
+      ],
+      "correct": 1,
+      "explanation": "\"Kún-chúi\" (滾水) adalah air yang sudah direbus matang hingga mendidih. \"Lim\" adalah minum."
+    },
+    {
+      "id": 2,
+      "question": "Jika ada teman di Medan berseru \"Chin-chia̍h bô?!\", maksudnya adalah...",
+      "options": [
+        "Beneran nggak sih?! (Serius?!)",
+        "Kamu sudah lapar belum?!",
+        "Harganya murah banget?!",
+        "Mau pulang jam berapa?!"
+      ],
+      "correct": 0,
+      "explanation": "\"Chin-chia̍h\" (真實) adalah slang percakapan Medan untuk menanyakan kepastian/kebenaran."
+    },
+    {
+      "id": 3,
+      "question": "Istilah \"Lo̍k-kho\" (落科) dalam tongkrongan anak muda Medan bermakna...",
+      "options": [
+        "Juara satu / Menang banyak",
+        "Zonk / Kalah telak / Jatuh gengsi",
+        "Pergi makan mie",
+        "Sedang banyak uang"
+      ],
+      "correct": 1,
+      "explanation": "\"Lo̍k-kho\" adalah istilah kekalahan atau kesialan saat taruhan atau berbisnis."
+    },
+    {
+      "id": 4,
+      "question": "Kata \"Sio̍k\" (俗) dalam transaksi jual-beli di pasar bermakna...",
+      "options": [
+        "Mahal sekali",
+        "Murah terjangkau",
+        "Barang tiruan palsu",
+        "Tidak boleh ditawar"
+      ],
+      "correct": 1,
+      "explanation": "\"Sio̍k\" bermakna murah meriah, lawan kata dari \"Kùi\" (mahal)."
+    },
+    {
+      "id": 5,
+      "question": "Di Medan dan pesisir Sumatera, pasar tradisional disebut sebagai...",
+      "options": [
+        "巴刹 (Pa-sat)",
+        "學校 (Ha̍k-hāu)",
+        "公館 (Kong-koán)",
+        "大廈 (Tāi-hà)"
+      ],
+      "correct": 0,
+      "explanation": "Hokkien Medan menyerap kata Melayu \"Pasar\" menjadi \"Pa-sat\" yang sangat lazim digunakan."
+    }
+  ],
+  "listeningChallenges": [
+    {
+      "id": 1,
+      "hanji": "滾水",
+      "poj": "Kún-chúi",
+      "options": [
+        "Air masak matang",
+        "Kopi susu panas",
+        "Es teh manis",
+        "Kue lobak"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 2,
+      "hanji": "頭家",
+      "poj": "Thâu-ke",
+      "options": [
+        "Karyawan baru",
+        "Tauke / Bos pemilik toko",
+        "Dokter tabib",
+        "Sopir angkot"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 3,
+      "hanji": "歹勢",
+      "poj": "Pháinn-sè",
+      "options": [
+        "Terima kasih banyak",
+        "Selamat ulang tahun",
+        "Maaf / Permisi sungkan",
+        "Sampai jumpa besok"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 4,
+      "hanji": "炒粿條",
+      "poj": "Chhá-kóe-tiâu",
+      "options": [
+        "Bakmi kuah",
+        "Nasi tim ayam",
+        "Kwetiau goreng",
+        "Bubur ikan"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 5,
+      "hanji": "愛拼才會贏",
+      "poj": "Ài piàⁿ chiah ē iâⁿ",
+      "options": [
+        "Harus berjuang baru bisa menang",
+        "Hidup tenang tanpa beban",
+        "Makan kenyang tidur nyenyak",
+        "Beli banyak dapat murah"
+      ],
+      "correct": 0
+    }
+  ],
+  "flashcards": [
+    {
+      "id": 1,
+      "hanji": "滾水",
+      "poj": "Kún-chúi",
+      "indo": "Air masak matang",
+      "tip": "Khas Medan: \"Thâu-ke, chi̍t-poe kún-chúi!\""
+    },
+    {
+      "id": 2,
+      "hanji": "歹勢",
+      "poj": "Pháinn-sè",
+      "indo": "Maaf / Permisi / Segan",
+      "tip": "Sering dipakai saat meminta maaf atau permisi lewat"
+    },
+    {
+      "id": 3,
+      "hanji": "免客氣",
+      "poj": "Bián kheh-khì",
+      "indo": "Sama-sama / Jangan sungkan",
+      "tip": "Jawaban sopan saat orang lain bilang \"To-siā\""
+    },
+    {
+      "id": 4,
+      "hanji": "頭家",
+      "poj": "Thâu-ke",
+      "indo": "Pemilik kedai / Bos / Tauke",
+      "tip": "Asal mula kata serapan bahasa Indonesia \"Tauke\""
+    },
+    {
+      "id": 5,
+      "hanji": "好食",
+      "poj": "Hó-chia̍h",
+      "indo": "Enak / Lezat",
+      "tip": "Dipakai memuji masakan sedap"
+    }
+  ],
+  "slangPairs": [
+    {
+      "id": 1,
+      "hokkien": "Lim kún-chúi",
+      "match": "Minum air matang"
+    },
+    {
+      "id": 2,
+      "hokkien": "Chin-chia̍h",
+      "match": "Beneran / Serius"
+    },
+    {
+      "id": 3,
+      "hokkien": "Lo̍k-kho",
+      "match": "Zonk / Kalah telak"
+    },
+    {
+      "id": 4,
+      "hokkien": "Hó-súi",
+      "match": "Cantik / Keren mantap"
+    },
+    {
+      "id": 5,
+      "hokkien": "Bô-tī-tô",
+      "match": "Tiba-tiba tanpa sebab"
+    }
+  ]
+}

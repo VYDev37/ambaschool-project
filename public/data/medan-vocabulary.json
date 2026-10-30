@@ -1,0 +1,301 @@
+[
+  {
+    "hanji": "滾水",
+    "poj": "Kún-chúi",
+    "tailo": "Kún-tsuí",
+    "indo": "Air masak / Air putih matang",
+    "category": "Kuliner & Minuman",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Thâu-ke, lâi chi̍t-poe kún-chúi! (Bos, minta segelas air putih matang!)",
+    "usage": "Sangat khas di Medan, Riau, & Penang. Bukan cuma sebut \"chúi\" (air mentah), tapi \"kún-chúi\" (air yang sudah dimasak mendidih).",
+    "tone": "Nada 2 + 2",
+    "tags": [
+      "Medan Populer",
+      "Kopitiam",
+      "Minuman"
+    ]
+  },
+  {
+    "hanji": "飲滾水",
+    "poj": "Lim kún-chúi",
+    "tailo": "Lim kún-tsuí",
+    "indo": "Minum air putih masak",
+    "category": "Kuliner & Minuman",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Kóng liáu chin chē oē, ài lim kún-chúi. (Bicara sudah banyak sekali, harus minum air putih.)",
+    "usage": "Di Medan sehari-hari selalu bilang \"lim kún-chúi\" saat mau minum air putih di rumah atau kedai.",
+    "tone": "Nada 1 + 2 + 2",
+    "tags": [
+      "Medan Populer",
+      "Harian"
+    ]
+  },
+  {
+    "hanji": "食飽未？",
+    "poj": "Chia̍h-pá--bē?",
+    "tailo": "Tsia̍h-pá--bē?",
+    "indo": "Sudah makan belum? (Apa kabar?)",
+    "category": "Sapaan & Adab",
+    "dialect": "Keduanya",
+    "example": "Lí chia̍h-pá--bē? Lâi lán chò-hóe chia̍h! (Sudah makan belum? Ayo makan bareng kita!)",
+    "usage": "Sapaan paling lazim dijumpai di Medan saat berpapasan siang atau malam.",
+    "tone": "Nada 8 + 2 + 7",
+    "tags": [
+      "Medan Populer",
+      "Sapaan"
+    ]
+  },
+  {
+    "hanji": "咖啡烏冰",
+    "poj": "Ko-pi-o-peng",
+    "tailo": "Ko-pi-oo-ping",
+    "indo": "Es kopi hitam manis tanpa susu",
+    "category": "Kuliner & Minuman",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Chi̍t-poe ko-pi-o-peng khah chioh thn̂g. (Segelas es kopi o gulanya sedikit saja.)",
+    "usage": "Istilah standar di seluruh kopitiam Medan, Selatpanjang, Bagansiapiapi, Batam, dan Penang.",
+    "tone": "Nada 1 + 1 + 1 + 1",
+    "tags": [
+      "Medan Populer",
+      "Kopitiam"
+    ]
+  },
+  {
+    "hanji": "茶烏冰",
+    "poj": "Tê-o-peng",
+    "tailo": "Tê-oo-ping",
+    "indo": "Es teh manis hitam",
+    "category": "Kuliner & Minuman",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Thâu-ke, tê-o-peng chi̍t-poe! (Bos, es teh manis satu gelas!)",
+    "usage": "Pesanan minuman paling umum di rumah makan Tionghoa Medan.",
+    "tone": "Nada 5 + 1 + 1",
+    "tags": [
+      "Medan Populer",
+      "Kopitiam"
+    ]
+  },
+  {
+    "hanji": "菜頭粿",
+    "poj": "Chhài-thâu-kóe",
+    "tailo": "Tshài-thâu-kué",
+    "indo": "Kue lobak goreng / Chai Tow Kway",
+    "category": "Kuliner & Minuman",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Chhài-thâu-kóe chhá hō͘ phang-phang! (Kue lobak digoreng sampai wangi gurih!)",
+    "usage": "Kuliner sarapan favorit di jalanan kota Medan dan Selatpanjang.",
+    "tone": "Nada 3 + 5 + 2",
+    "tags": [
+      "Medan Populer",
+      "Kuliner"
+    ]
+  },
+  {
+    "hanji": "頭家 / 頭家娘",
+    "poj": "Thâu-ke / Thâu-ke-niû",
+    "tailo": "Thâu-ke / Thâu-ke-niû",
+    "indo": "Bos / Juragan (Laki-laki / Perempuan)",
+    "category": "Pasar & Bisnis",
+    "dialect": "Keduanya",
+    "example": "Thâu-ke, chit-ê lōa-chē chîⁿ? (Bos/Tauke, ini berapa uang?)",
+    "usage": "Sumber kata serapan \"Tauke\" dalam bahasa Indonesia.",
+    "tone": "Nada 5 + 1 / 5 + 1 + 5",
+    "tags": [
+      "Medan Populer",
+      "Bisnis"
+    ]
+  },
+  {
+    "hanji": "做生理",
+    "poj": "Chò seng-lí",
+    "tailo": "Tsò sing-lí",
+    "indo": "Berdagang / Menjalankan bisnis",
+    "category": "Pasar & Bisnis",
+    "dialect": "Keduanya",
+    "example": "I tī Tiong-hng chò seng-lí. (Dia berbisnis di pusat kota Medan.)",
+    "usage": "Di Indonesia diserap menjadi kata \"Sengli\" di kalangan pasar lama.",
+    "tone": "Nada 3 + 1 + 2",
+    "tags": [
+      "Medan Populer",
+      "Bisnis"
+    ]
+  },
+  {
+    "hanji": "歹勢",
+    "poj": "Pháinn-sè",
+    "tailo": "Pháinn-sè",
+    "indo": "Maaf / Permisi / Sungkan / Segan",
+    "category": "Sapaan & Adab",
+    "dialect": "Keduanya",
+    "example": "Pháinn-sè lah, kóaⁿ sî-kan ài chao先! (Maaf banget ya, buru-buru harus duluan!)",
+    "usage": "Kata emas yang wajib diketahui; sering diucapkan warga Medan untuk mencairkan suasana.",
+    "tone": "Nada 2 + 3",
+    "tags": [
+      "Medan Populer",
+      "Sopan Santun"
+    ]
+  },
+  {
+    "hanji": "真心話 / 真實",
+    "poj": "Chin-chia̍h",
+    "tailo": "Tsin-tsia̍h",
+    "indo": "Beneran / Sungguhan / Serius",
+    "category": "Ungkapan Gaul",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Chin-chia̍h bô? M̄-thang phiàn góa! (Beneran nggak? Jangan bohongi aku!)",
+    "usage": "Slang percakapan Medan yang sangat sering terdengar (\"Cin-cia bo?\").",
+    "tone": "Nada 1 + 8",
+    "tags": [
+      "Medan Populer",
+      "Slang Medan"
+    ]
+  },
+  {
+    "hanji": "好水",
+    "poj": "Hó-súi",
+    "tailo": "Hó-suí",
+    "indo": "Cantik sekali / Mantap keren",
+    "category": "Ungkapan Gaul",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Wa, lí chit-niá saⁿ hó-súi leh! (Wah, baju kamu ini cantik banget deh!)",
+    "usage": "Pujian umum di Medan: \"Ho sui lah!\".",
+    "tone": "Nada 2 + 2",
+    "tags": [
+      "Medan Populer",
+      "Slang Medan"
+    ]
+  },
+  {
+    "hanji": "無底代",
+    "poj": "Bô-tī-tāi (Bô-ti-tô)",
+    "tailo": "Bô-tī-tāi",
+    "indo": "Gak ada angin gak ada hujan / Tiba-tiba tanpa sebab",
+    "category": "Ungkapan Gaul",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Bô-ti-tô i lâi kóng chit-khoán oē. (Tiba-tiba tanpa sebab dia ngomong begitu.)",
+    "usage": "Frasa khas percakapan Medan (\"Bo ti to\").",
+    "tone": "Nada 5 + 7 + 7",
+    "tags": [
+      "Medan Populer",
+      "Slang Medan"
+    ]
+  },
+  {
+    "hanji": "落科",
+    "poj": "Lo̍k-kho (Lok-ko)",
+    "tailo": "Lo̍k-kho",
+    "indo": "Kalah telak / Jatuh gengsi / Zonk",
+    "category": "Ungkapan Gaul",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Kin-á-ji̍t chò seng-lí chin lo̍k-kho. (Hari ini bisnis lagi boncos/zonk.)",
+    "usage": "Slang Medan yang sangat terkenal (\"Lok-ko\").",
+    "tone": "Nada 8 + 1",
+    "tags": [
+      "Medan Populer",
+      "Slang Medan"
+    ]
+  },
+  {
+    "hanji": "巴剎",
+    "poj": "Pa-sat (Pasa)",
+    "tailo": "Pa-sat",
+    "indo": "Pasar tradisional",
+    "category": "Pasar & Bisnis",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Má-mà khì pa-sat bé chhài. (Mama pergi ke pasar belanja sayur.)",
+    "usage": "Serapan kata Melayu/Indonesia \"Pasar\" yang diucapkan dalam Hokkien Medan.",
+    "tone": "Nada 1 + 4",
+    "tags": [
+      "Medan Populer",
+      "Pasar"
+    ]
+  },
+  {
+    "hanji": "便當",
+    "poj": "Piān-tong",
+    "tailo": "Piān-tong",
+    "indo": "Nasi kotak / Bekal makanan",
+    "category": "Kuliner & Minuman",
+    "dialect": "Keduanya",
+    "example": "Tiong-tàu chia̍h piān-tong kán-tán chi̍t-chúi. (Siang makan nasi kotak yang praktis.)",
+    "usage": "Populer baik di Medan maupun di Taiwan.",
+    "tone": "Nada 7 + 1",
+    "tags": [
+      "Kopitiam",
+      "Kuliner"
+    ]
+  },
+  {
+    "hanji": "愛睏",
+    "poj": "Ài-khùn",
+    "tailo": "Ài-khùn",
+    "indo": "Mengantuk / Mau tidur",
+    "category": "Aktivitas & Harian",
+    "dialect": "Keduanya",
+    "example": "Góa chin ài-khùn矣, ài khì khùn. (Aku ngantuk banget nih, mau tidur.)",
+    "usage": "Di Medan sering disingkat: \"Ai khun lah wa\".",
+    "tone": "Nada 3 + 3",
+    "tags": [
+      "Harian"
+    ]
+  },
+  {
+    "hanji": "走厝",
+    "poj": "Cháu-chhù",
+    "tailo": "Tsáu-tshù",
+    "indo": "Pulang ke rumah / Balik kandang",
+    "category": "Aktivitas & Harian",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Àm矣, ta̍k-ke ài cháu-chhù矣! (Sudah malam, semua ayo pulang ke rumah!)",
+    "usage": "Khas Medan menggabungkan lari/jalan (\"cháu\") ke rumah (\"chhù\").",
+    "tone": "Nada 2 + 3",
+    "tags": [
+      "Medan Populer",
+      "Harian"
+    ]
+  },
+  {
+    "hanji": "車頭",
+    "poj": "Chhia-thâu",
+    "tailo": "Tshia-thâu",
+    "indo": "Terminal bus / Stasiun kereta / Pangkalan angkot",
+    "category": "Perjalanan & Kota",
+    "dialect": "Hokkien Medan & Nusantara",
+    "example": "Khì chhia-thâu thêng chhia. (Pergi ke pangkalan nunggu kendaraan.)",
+    "usage": "Sering dipakai saat menyebut stasiun kereta Medan atau terminal Sambu/Pinang Baris.",
+    "tone": "Nada 1 + 5",
+    "tags": [
+      "Medan Populer",
+      "Transportasi"
+    ]
+  },
+  {
+    "hanji": "拍牌",
+    "poj": "Phah-pâi",
+    "tailo": "Phah-pâi",
+    "indo": "Main kartu / Main mahjong",
+    "category": "Ungkapan Gaul",
+    "dialect": "Keduanya",
+    "example": "Chit-mê lán chò-hóe phah-pâi! (Malam ini kita barengan main kartu!)",
+    "usage": "Kegiatan rekreasi populer saat kumpul keluarga Imlek.",
+    "tone": "Nada 4 + 5",
+    "tags": [
+      "Medan Populer",
+      "Tradisi"
+    ]
+  },
+  {
+    "hanji": "好額 / 散赤",
+    "poj": "Hó-gia̍h / Sàn-chhiah",
+    "tailo": "Hó-gia̍h / Sàn-tshiah",
+    "indo": "Kaya raya / Kurang mampu (miskin)",
+    "category": "Kehidupan & Sifat",
+    "dialect": "Keduanya",
+    "example": "I sī hó-gia̍h-lâng. (Dia orang kaya / konglomerat.)",
+    "usage": "Sering dipakai menilai taraf hidup atau bercanda antar teman.",
+    "tone": "Nada 2 + 8 / 3 + 4",
+    "tags": [
+      "Harian"
+    ]
+  }
+]
