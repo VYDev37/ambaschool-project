@@ -21,7 +21,7 @@ export default function Footer({ onOpenSearch }: FooterProps): React.ReactElemen
           <Link to="/" className="footer__logo" onClick={() => playClick()}>
             <span className="footer__logo-icon chinese-text">閩</span>
             <span className="footer__logo-text">
-              Hokkien<span className="footer__logo-accent">Learn</span>
+              Teng<span className="footer__logo-accent">Lang</span>
             </span>
           </Link>
           <p className="footer__desc">

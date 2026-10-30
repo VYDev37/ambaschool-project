@@ -89,7 +89,7 @@ export default function Navbar({ onOpenSearch }: NavbarProps): React.ReactElemen
             閩
           </motion.span>
           <span className="navbar__logo-text">
-            Hokkien<span className="navbar__logo-accent">Learn</span>
+            Teng<span className="navbar__logo-accent">Lang</span>
           </span>
           <span className="navbar__logo-version">v2</span>
         </Link>
