@@ -98,7 +98,7 @@ export default function PhraseOfDay(): React.ReactElement {
 
   const handleCopy = () => {
     playClick()
-    const text = `「${phrase.chinese}」(${phrase.poj})\nArti: ${phrase.indonesian}\nMakna: ${phrase.explanation}\nBelajar Bahasa Hokkien di HokkienLearn`
+    const text = `「${phrase.chinese}」(${phrase.poj})\nArti: ${phrase.indonesian}\nMakna: ${phrase.explanation}\nBelajar Bahasa Hokkien di TengLang`
     navigator.clipboard?.writeText(text).then(() => {
       setCopied(true)
       showToast('📋 Frasa disalin ke clipboard!', 'success', 2000)

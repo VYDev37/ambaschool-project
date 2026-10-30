@@ -93,7 +93,7 @@ export default function Footer({ onOpenSearch }: FooterProps): React.ReactElemen
 
       <div className="footer__bottom container">
         <p className="footer__copyright">
-          &copy; {new Date().getFullYear()} HokkienLearn. Dibuat dengan <HiHeart className="footer__heart" /> untuk pelestarian budaya Tionghoa Indonesia.
+          &copy; {new Date().getFullYear()} TengLang. Dibuat dengan <HiHeart className="footer__heart" /> untuk pelestarian budaya Tionghoa Indonesia.
         </p>
         <div className="footer__bottom-links">
           <span>Tiong-kok / Tâi-oân / Lâm-iûⁿ Hok-kiàn-oē</span>
