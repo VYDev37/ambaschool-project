@@ -47,7 +47,7 @@ const features: FeatureItem[] = [
     icon: <HiSparkles />,
     title: 'Database 13,000+ Kosakata',
     description:
-      'Kamus akbar 13,000+ entri dilengkapi ejaan POJ (Pe̍h-ōe-jī), Tâi-lô, aksara Hanji, dan contoh kalimat.',
+      'Kamus lengkap 13,000+ entri dilengkapi ejaan POJ (Pe̍h-ōe-jī), Tâi-lô, aksara Hanji, dan contoh kalimat.',
     color: '#3b82f6',
     stat: '13K+ Kata'
   },

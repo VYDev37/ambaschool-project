@@ -13,7 +13,7 @@ export const LessonsHero: React.FC = () => {
           className="lessons-hero__content"
         >
           <span className="lessons-hero__tag">
-            <HiSparkles /> Kurikulum Akbar 26 Modul Terstruktur
+            <HiSparkles /> Kurikulum Terstruktur 26 Modul Lengkap
           </span>
           <h1 className="lessons-hero__title">
             Kursus & Percakapan <br />

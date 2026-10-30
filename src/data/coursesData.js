@@ -751,7 +751,7 @@ export const coursesModules = [
     subtitle: 'Istilah "Pài-pài", membakar dupa "Hiuⁿ", menghormati Dewa Langit Thiⁿ-kong, dan memohon berkah.',
     duration: '18 Menit',
     badge: 'Penjaga Harmoni Leluhur',
-    culturalNote: 'Tradisi Sembahyang Thiⁿ-kong (拜天公) pada tanggal 9 Imlek adalah tradisi terakbar penutur Hokkien di seluruh dunia, sebagai simbol penyelamatan leluhur dari masa perang.',
+    culturalNote: 'Tradisi Sembahyang Thiⁿ-kong (拜天公) pada tanggal 9 Imlek adalah tradisi terbesar penutur Hokkien di seluruh dunia, sebagai simbol penyelamatan leluhur dari masa perang.',
     dialogue: [
       { speaker: 'Ayah', role: 'A', hanji: 'Kin-á-ji̍t sī chhe-káu, lán chún-pī tiⁿ-kóe kap ông-lâi pài Thiⁿ-kong!', poj: 'Kin-á-ji̍t sī chhe-káu, lán chún-pī tiⁿ-kóe kap ông-lâi pài Thiⁿ-kong!', indo: 'Hari ini tanggal sembilan Imlek, kita siapkan kue keranjang dan buah nanas untuk sembahyang Dewa Langit!' },
       { speaker: 'Putra', role: 'B', hanji: 'Pah, nâ-chiat ài chah kuí ki hiuⁿ?', poj: 'Pah, nâ-chiat ài chah kuí ki hiuⁿ?', indo: 'Pa, waktu menyalakan dupa kita bawa berapa batang hio?' },

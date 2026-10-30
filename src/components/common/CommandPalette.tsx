@@ -69,7 +69,7 @@ export default function CommandPalette({
         {
           type: 'page',
           title: 'Kamus Lengkap (13,000+ Entri)',
-          subtitle: 'Pencarian akbar Hanzi, POJ, Tâi-lô, dan Indonesia',
+          subtitle: 'Pencarian lengkap Hanzi, POJ, Tâi-lô, dan Indonesia',
           path: '/dictionary',
           icon: <HiBookOpen />
         },

@@ -63,7 +63,7 @@ export default function LessonPreview(): React.ReactElement {
           transition={{ duration: 0.6 }}
         >
           <div className="lesson-preview__tag">
-            <HiSparkles /> 26 Modul Kurikulum Akbar Berstandar
+            <HiSparkles /> 26 Modul Kurikulum Lengkap & Berstandar
           </div>
           <h2 className="lesson-preview__title">
             Kurikulum Pembelajaran <br />

@@ -16,7 +16,7 @@ export const VocabularyHero: React.FC<VocabularyHeroProps> = ({
         <div className="container">
           <div className="vocab-hero__content">
             <span className="vocab-hero__tag">
-              <HiSparkles /> Database Akbar 13,000+ Kosakata
+              <HiSparkles /> Database Lengkap 13,000+ Kosakata
             </span>
             <h1 className="vocab-hero__title">
               Kamus Lengkap <span className="gradient-text">Taiwan & Medan</span>
