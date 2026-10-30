@@ -1,4 +1,4 @@
-# HokkienLearn (v2)
+# TengLang (v2)
 
 Platform pembelajaran Bahasa Minnan (Hokkien) modern untuk penutur Bahasa Indonesia. Aplikasi ini menggabungkan materi otentik dialek Nusantara (Medan, Bagan, Riau) dan standar Taiwan MoE (Kementerian Pendidikan Taiwan) dalam antarmuka interaktif yang cepat dan ringan.
 
